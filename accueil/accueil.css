@@ -1,0 +1,1020 @@
+/* williamsan.art, accueil : la maison William San.
+   L'ivoire du papier et l'encre, et derrière, des kanji presque effacés,
+   comme sur med-san.art. Sous le nom, deux fenêtres carrées du même gabarit
+   se répondent : l'une ouverte sur la nuit de Popsan, cernée d'un filet d'or,
+   où la lanterne d'Akari s'allume ; l'autre ouverte sur la porcelaine de
+   Medsan, cernée d'un filet de cobalt. Un fil d'encre passe entre elles et
+   descend jusqu'au récit. Une seule séquence à l'arrivée, puis plus rien ne
+   bouge tant que la main ne s'approche pas.                                 */
+
+@property --tour {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 360deg;
+}
+
+:root {
+  color-scheme: light;
+
+  /* La maison : papier et encre */
+  --ivoire: #e9e5dc;
+  --encre: #1b1916;
+  --usuzumi: #5c564e;            /* encre diluée : textes secondaires */
+  --filet: rgb(27 25 22 / .3);   /* le fil */
+
+  /* Popsan : la nuit, la lanterne, l'or */
+  --nuit: #070706;
+  --kin: #a7803c;                /* l'or du cadre Popsan */
+  --ocre: #85561a;               /* l'accroche Popsan sur l'ivoire (5:1) */
+
+  /* Medsan : la porcelaine, le cobalt */
+  --porcelaine: #f6f5f1;
+  --cobalt: #22418c;
+
+  --serif: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Iowan Old Style", Georgia, serif;
+  --sans: "Zen Kaku Gothic New", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --gouttiere: clamp(1rem, 4.5vw, 3.5rem);
+  --lent: cubic-bezier(.2, .6, .2, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--ivoire);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ivoire);
+  color: var(--encre);
+  font: 400 1.125rem/1.8 var(--serif);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+cite { font-style: italic; }
+
+::selection { background: var(--encre); color: var(--ivoire); }
+
+:focus-visible {
+  outline: 1px solid currentColor;
+  outline-offset: 4px;
+}
+
+.sr {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.evitement {
+  position: fixed;
+  z-index: 50;
+  top: .75rem; left: .75rem;
+  padding: .6rem 1rem;
+  background: var(--encre);
+  color: var(--ivoire);
+  font: 500 .9375rem/1.2 var(--serif);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.evitement:focus { transform: none; }
+
+.lien {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--filet);
+  text-underline-offset: .28em;
+  transition: text-decoration-color .3s ease;
+}
+.lien:hover { text-decoration-color: currentColor; }
+
+/* ───────────────────────── Les kanji en fond ─────────────────────────
+   Le procédé de med-san.art (FloatingKanji) : une couche fixe derrière la
+   page, dix caractères à l'encre à 8 %, de 8 à 20 vw, inclinés de -5°, 0° ou
+   5°, qui glissent plus lentement que la page et pâlissent jusqu'à 3 % au
+   fil de la lecture. Le script ne pose qu'une valeur, --defil, et seulement
+   pendant le défilement. Sans script : immobiles à 8 %. En mouvement réduit :
+   ils ne glissent plus, ils pâlissent seulement.                            */
+
+.kanji {
+  --defil: 0;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.kanji span {
+  position: absolute;
+  top: var(--t);
+  left: var(--g);
+  font: 400 var(--c)/1 var(--serif);
+  color: var(--encre);
+  opacity: max(.03, .08 - var(--defil) * .00005);
+  transform: rotate(var(--r));
+  will-change: transform, opacity;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kanji span { transform: translate3d(0, calc(var(--defil) * var(--v) * 1px), 0) rotate(var(--r)); }
+}
+/* La page passe devant la couche de kanji */
+main, .pied { position: relative; z-index: 1; }
+
+/* ───────────────────────── En-tête : identique sur tout le site ───────────────────────── */
+
+.entete {
+  position: absolute;
+  z-index: 10;
+  inset: 0 0 auto 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: calc(1.25rem + env(safe-area-inset-top)) var(--gouttiere) 1rem;
+}
+
+.marque {
+  font: 500 1.1875rem/1.2 var(--serif);
+  letter-spacing: .01em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem clamp(1.1rem, 2.4vw, 2.25rem);
+}
+.nav a {
+  font: 400 1rem/1.2 var(--serif);
+  color: var(--usuzumi);
+  text-decoration: none;
+  padding: .5rem 0;
+  transition: color .25s ease;
+}
+.nav a:hover { color: var(--encre); }
+.nav a[aria-current="page"] {
+  color: var(--encre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .45em;
+}
+
+@media (max-width: 40rem) {
+  .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
+  .entete .nav { justify-content: space-between; gap: 0; }
+  .entete .nav a { font-size: .9375rem; }
+}
+
+/* ───────────────────────── Le seuil ───────────────────────── */
+
+.seuil {
+  /* La taille d'une fenêtre : deux grandes portes, qui tiennent avec leur
+     légende dans le premier écran (près de la moitié de sa hauteur). */
+  --baie: clamp(10rem, min(36vw, 44svh), 27rem);
+  --ecart: clamp(2.75rem, 8vw, 8.5rem);
+  --pied-seuil: clamp(3rem, 8svh, 5.5rem);
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(5.75rem, 12svh, 8rem) var(--gouttiere) var(--pied-seuil);
+  text-align: center;
+}
+
+.seuil__nom {
+  margin: 0;
+  font: 500 clamp(2.375rem, 4.3vw, 3.625rem)/1.05 var(--serif);
+  letter-spacing: .035em;
+  /* L'espacement s'ajoute aussi après la dernière lettre : on le reprend. */
+  margin-right: -.035em;
+}
+
+.seuil__phrase {
+  margin: clamp(1rem, 2.6svh, 1.5rem) auto 0;
+  font: 400 clamp(1.0625rem, 1.45vw, 1.3125rem)/1.6 var(--serif);
+  color: var(--usuzumi);
+  text-wrap: balance;
+}
+.seuil__phrase span { display: block; }
+
+/* Les deux fenêtres, de part et d'autre du fil */
+.fenetres {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: var(--ecart);
+  margin: clamp(2rem, 5.5svh, 3.75rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.fenetres li { display: flex; }
+
+/* Le fil d'encre part d'entre les fenêtres et descend vers le récit */
+.fenetres::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: calc(var(--baie) * .18);
+  bottom: calc(-1 * var(--pied-seuil));
+  width: 1px;
+  background: var(--filet);
+  transform-origin: top;
+}
+
+.fenetre {
+  --filet-porte: var(--kin);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.fenetre--medsan { --filet-porte: var(--cobalt); }
+.fenetre:focus-visible { outline: none; }
+/* Au clavier : un cadre net autour de la porte entière, à la couleur de son filet. */
+.fenetre:focus-visible .fenetre__baie { outline: 2px solid var(--filet-porte); outline-offset: .5rem; }
+
+/* La baie : la même boîte carrée pour les deux, et la même vitre carrée
+   dedans, pour que les fenêtres et leurs légendes tombent sur la même ligne. */
+.fenetre__baie {
+  position: relative;
+  width: var(--baie);
+  aspect-ratio: 1;
+  transition: translate .8s var(--lent);
+}
+.fenetre__vitre { position: absolute; inset: 5.5%; }
+
+.fenetre__jour {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  isolation: isolate;
+  box-shadow: 0 1.75rem 2.5rem -2.25rem rgb(27 25 22 / .45);
+  transition: box-shadow .9s var(--lent);
+}
+/* Medsan : sous la main, un reflet passe sur la porcelaine, une fois. */
+.fenetre--medsan .fenetre__jour::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(105deg, rgb(255 255 255 / 0) 35%, rgb(255 255 255 / .38) 50%, rgb(255 255 255 / 0) 65%);
+  translate: -120% 0;
+  pointer-events: none;
+}
+.fenetre__toile {
+  position: absolute;
+  transition: transform 1.8s var(--lent);
+}
+.fenetre__toile img { width: 100%; height: 100%; }
+.fenetre__voile {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Popsan : la fenêtre carrée, ouverte sur la nuit. La toile entière, comme
+   pour Medsan ; la boîte garde les proportions de l'image (1200 × 1172) pour
+   que la lueur reste posée sur la lanterne peinte. */
+.fenetre--popsan .fenetre__jour { background: var(--nuit); }
+.fenetre--popsan .fenetre__toile {
+  left: -1.2%;
+  top: 0;
+  height: 100%;
+  aspect-ratio: 1200 / 1172;
+  transform-origin: 34% 58%;
+}
+.fenetre--popsan .fenetre__voile { background: var(--nuit); }
+
+/* La lueur de la lanterne : posée sur la lanterne peinte, en écran */
+.fenetre__lueur {
+  position: absolute;
+  left: 19%;
+  top: 77.5%;
+  width: 115%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  mix-blend-mode: screen;
+  opacity: .5;
+  pointer-events: none;
+  transition: opacity 1.6s var(--lent);
+}
+.fenetre__souffle {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle closest-side,
+    rgb(255 178 88 / 0) 0 12%,
+    rgb(255 172 78 / .3) 21%,
+    rgb(255 160 66 / .17) 34%,
+    rgb(255 146 54 / .06) 58%,
+    rgb(255 140 50 / 0) 100%);
+  /* La respiration ne tourne que sous la main : à l'arrêt, elle se fige. */
+  animation: respirer 3.8s ease-in-out infinite paused;
+}
+
+/* Le cadre, un filet d'or tracé d'un seul geste autour de la vitre */
+.fenetre--popsan .fenetre__cadre {
+  position: absolute;
+  inset: calc(-1 * clamp(.45rem, 1.1vw, .8rem));
+  border: 1px solid var(--kin);
+  opacity: .75;
+  -webkit-mask-image: conic-gradient(from 215deg, #000 var(--tour), transparent 0);
+  mask-image: conic-gradient(from 215deg, #000 var(--tour), transparent 0);
+  transition: opacity .9s ease, scale 1.4s var(--lent);
+}
+
+/* Medsan : la fenêtre carrée, ouverte sur la porcelaine */
+.fenetre--medsan .fenetre__jour { background: var(--porcelaine); }
+.fenetre--medsan .fenetre__toile {
+  inset: 0;
+  transform-origin: 50% 55%;
+}
+.fenetre--medsan .fenetre__toile img { object-fit: cover; }
+.fenetre--medsan .fenetre__voile { background: var(--porcelaine); }
+
+/* Le filet de cobalt, comme celui qui cerne le bord d'un bol */
+.fenetre--medsan .fenetre__cadre {
+  position: absolute;
+  inset: calc(-1 * clamp(.45rem, 1.1vw, .8rem));
+  transition: scale 1.4s var(--lent);
+}
+.fenetre--medsan .fenetre__cadre span {
+  position: absolute;
+  background: var(--cobalt);
+}
+.fenetre--medsan .fenetre__cadre span:nth-child(1) { top: 0; left: 0; right: 0; height: 1px; transform-origin: left; }
+.fenetre--medsan .fenetre__cadre span:nth-child(2) { top: 0; right: 0; bottom: 0; width: 1px; transform-origin: top; }
+.fenetre--medsan .fenetre__cadre span:nth-child(3) { bottom: 0; left: 0; right: 0; height: 1px; transform-origin: right; }
+.fenetre--medsan .fenetre__cadre span:nth-child(4) { top: 0; left: 0; bottom: 0; width: 1px; transform-origin: bottom; }
+/* Le second filet, plus fin, qui double le premier sous la main */
+.fenetre--medsan .fenetre__cadre::after {
+  content: "";
+  position: absolute;
+  inset: .3rem;
+  border: 1px solid rgb(34 65 140 / .55);
+  opacity: 0;
+  scale: 1.04;
+  transition: opacity .9s ease, scale 1.2s var(--lent);
+}
+
+/* La légende sous chaque fenêtre */
+.fenetre__legende {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: clamp(1.4rem, 3.2svh, 2.1rem);
+}
+.fenetre__nom {
+  position: relative;
+  font: 500 clamp(1.75rem, 1.2rem + 1.5vw, 2.625rem)/1.15 var(--serif);
+  letter-spacing: .03em;
+  color: var(--encre);
+}
+/* Un trait court sous le nom, qui s'étire quand on vise la fenêtre */
+.fenetre__nom::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -.3rem;
+  height: 1px;
+  background: currentColor;
+  scale: 0 1;
+  transition: scale .9s var(--lent);
+}
+.fenetre__accroche {
+  margin-top: .5rem;
+  font: 400 clamp(1.0625rem, .95rem + .45vw, 1.3125rem)/1.4 var(--serif);
+  letter-spacing: .01em;
+  text-wrap: balance;
+}
+.fenetre--popsan .fenetre__accroche { color: var(--ocre); }
+.fenetre--medsan .fenetre__accroche { color: var(--cobalt); }
+
+/* L'invitation : « Entrer », et une flèche tracée d'un trait, qui s'allonge sous la main. */
+.fenetre__entrer {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  margin-top: 1rem;
+  padding: .55rem 1.15rem .6rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--filet-porte) 55%, transparent);
+  border-radius: 999px;
+  font: 500 .9375rem/1.2 var(--sans);
+  letter-spacing: .06em;
+  color: var(--encre);
+  transition: background-color .6s var(--lent), color .6s var(--lent), border-color .6s var(--lent);
+}
+.fenetre__fleche {
+  position: relative;
+  width: 1.6rem;
+  height: 1px;
+  background: currentColor;
+  transition: width .7s var(--lent);
+}
+.fenetre__fleche::after {
+  content: "";
+  position: absolute;
+  right: .03rem;
+  top: calc(50% - .225rem);
+  width: .45rem;
+  height: .45rem;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+
+/* Sous la main ou au clavier : la porte se soulève, s'éclaire, et la flèche s'allonge */
+@media (hover: hover) {
+  .fenetre:hover .fenetre__baie { translate: 0 -.6rem; }
+  .fenetre:hover .fenetre__jour { box-shadow: 0 2.75rem 3.5rem -2.25rem rgb(27 25 22 / .55); }
+  .fenetre--popsan:hover .fenetre__jour { box-shadow: 0 2.75rem 3.5rem -2.25rem rgb(27 25 22 / .55), 0 0 4.5rem -1rem rgb(214 150 70 / .45); }
+  .fenetre--medsan:hover .fenetre__jour::after { translate: 120% 0; transition: translate 1.5s var(--lent); }
+  .fenetre:hover .fenetre__entrer { background: var(--filet-porte); border-color: var(--filet-porte); color: var(--ivoire); }
+  .fenetre:hover .fenetre__fleche { width: 2.6rem; }
+  .fenetre:hover .fenetre__toile { transform: scale(1.045); }
+  .fenetre:hover .fenetre__nom::after { scale: 1 1; }
+  .fenetre--popsan:hover .fenetre__lueur { opacity: 1; }
+  .fenetre--popsan:hover .fenetre__souffle { animation-play-state: running; }
+  .fenetre--popsan:hover .fenetre__cadre { opacity: 1; scale: 1.025; }
+  .fenetre--medsan:hover .fenetre__cadre { scale: 1.03; }
+  .fenetre--medsan:hover .fenetre__cadre::after { opacity: 1; scale: 1; }
+}
+.fenetre:focus-visible .fenetre__baie { translate: 0 -.6rem; }
+.fenetre:focus-visible .fenetre__entrer { background: var(--filet-porte); border-color: var(--filet-porte); color: var(--ivoire); }
+.fenetre:focus-visible .fenetre__fleche { width: 2.6rem; }
+.fenetre:focus-visible .fenetre__toile { transform: scale(1.045); }
+.fenetre:focus-visible .fenetre__nom::after { scale: 1 1; }
+.fenetre--popsan:focus-visible .fenetre__lueur { opacity: 1; }
+.fenetre--popsan:focus-visible .fenetre__souffle { animation-play-state: running; }
+.fenetre--popsan:focus-visible .fenetre__cadre { opacity: 1; scale: 1.025; }
+.fenetre--medsan:focus-visible .fenetre__cadre { scale: 1.03; }
+.fenetre--medsan:focus-visible .fenetre__cadre::after { opacity: 1; scale: 1; }
+
+@keyframes respirer {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .55; }
+}
+
+/* L'arrivée : une seule séquence, lente. Le nom se pose comme l'encre, la
+   phrase suit ; le fil descend ; la nuit s'ouvre dans la fenêtre Popsan,
+   l'or s'y trace et la lanterne s'allume ; le cobalt se trace autour de la
+   porcelaine.                                                              */
+@media (prefers-reduced-motion: no-preference) {
+  .seuil__nom { animation: poser 1.6s var(--lent) .1s both; }
+  .seuil__phrase span:nth-child(1) { animation: poser 1.4s var(--lent) .6s both; }
+  .seuil__phrase span:nth-child(2) { animation: poser 1.4s var(--lent) .9s both; }
+
+  .fenetres::before { animation: tracer 1.8s cubic-bezier(.5, 0, .2, 1) 1.5s both; }
+
+  .fenetre__jour { animation: paraitre 1.2s ease-out 1.25s both; }
+  .fenetre--medsan .fenetre__jour { animation-delay: 1.5s; }
+
+  .fenetre--popsan .fenetre__voile { animation: dissiper 3s cubic-bezier(.45, 0, .3, 1) 1.9s backwards; }
+  .fenetre--medsan .fenetre__voile { animation: dissiper 2.4s cubic-bezier(.45, 0, .3, 1) 2.1s backwards; }
+
+  .fenetre__lueur { animation: allumer 4.2s ease-in-out 2.3s backwards; }
+
+  .fenetre--popsan .fenetre__cadre { animation: tourner 2.4s cubic-bezier(.55, 0, .25, 1) 1.6s backwards; }
+
+  .fenetre--medsan .fenetre__cadre span { animation: filer-x .8s cubic-bezier(.6, 0, .3, 1) backwards; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(2n) { animation-name: filer-y; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(1) { animation-delay: 1.8s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(2) { animation-delay: 2.45s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(3) { animation-delay: 3.1s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(4) { animation-delay: 3.75s; }
+
+  .fenetre__legende { animation: poser 1.4s var(--lent) 2.6s both; }
+  .fenetre--medsan .fenetre__legende { animation-delay: 2.85s; }
+}
+
+@keyframes poser {
+  from { opacity: 0; filter: blur(8px); }
+  to { opacity: 1; filter: blur(0); }
+}
+@keyframes paraitre {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes dissiper {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+/* La flamme prend, monte, retombe un peu, se pose */
+@keyframes allumer {
+  0% { opacity: 0; }
+  38% { opacity: .95; }
+  62% { opacity: .42; }
+  82% { opacity: .66; }
+  100% { opacity: .5; }
+}
+@keyframes tourner {
+  from { --tour: 0deg; }
+  to { --tour: 360deg; }
+}
+@keyframes filer-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes filer-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes tracer {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+/* Téléphone : deux grandes cartes empilées ; le fil d'encre relie l'une à
+   l'autre (le récit, lui, suit la marge gauche). */
+@media (max-width: 40rem) {
+  /* Hauteur naturelle : le haut du récit affleure sous les fenêtres. */
+  .seuil {
+    --baie: min(78vw, 21rem);
+    --ecart: 4.5rem;
+    --pied-seuil: 3.25rem;
+    min-height: 0;
+    padding-top: 8.25rem;
+  }
+  .fenetres { flex-direction: column; align-items: center; margin-top: 2.25rem; }
+  .fenetres::before { display: none; }
+  .fenetres li + li { position: relative; }
+  .fenetres li + li::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 1rem);
+    height: calc(var(--ecart) - 2rem);
+    width: 1px;
+    background: var(--filet);
+  }
+  .fenetre__legende { margin-top: 1.25rem; }
+  .fenetre__nom { font-size: 2rem; }
+  .fenetre__entrer { margin-top: .9rem; }
+  /* Au doigt, la porte répond aussi. */
+  .fenetre:active .fenetre__entrer { background: var(--filet-porte); border-color: var(--filet-porte); color: var(--ivoire); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fenetre__toile, .fenetre__lueur, .fenetre__cadre, .fenetre__cadre::after, .fenetre__nom::after,
+  .fenetre__baie, .fenetre__jour, .fenetre__entrer, .fenetre__fleche { transition: none; }
+  .fenetre:hover .fenetre__baie, .fenetre:focus-visible .fenetre__baie { translate: none; }
+  .fenetre--medsan .fenetre__jour::after { display: none; }
+  .fenetre__souffle { animation: none; }
+}
+
+/* ───────────────────────── Le récit ───────────────────────── */
+
+.recit {
+  --ecart: clamp(2rem, 4vw, 3.5rem);
+  position: relative;
+  padding: clamp(3rem, 8svh, 5.5rem) var(--gouttiere) clamp(6rem, 18svh, 11rem);
+}
+
+.recit::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: var(--filet);
+  transform-origin: top;
+}
+
+.recit__bloc {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: baseline;
+}
+.recit__bloc + .recit__bloc { margin-top: clamp(3.5rem, 9svh, 6rem); }
+
+.recit__titre {
+  position: relative;
+  grid-column: 1;
+  margin: 0;
+  padding-right: var(--ecart);
+  font: 500 clamp(1.375rem, 2.1vw, 1.875rem)/1.3 var(--serif);
+  letter-spacing: -.005em;
+  text-align: right;
+  text-wrap: balance;
+}
+/* Un nœud sur le fil, à hauteur de chaque titre */
+.recit__titre::after {
+  content: "";
+  position: absolute;
+  right: -4px;
+  top: .5em;
+  width: 7px;
+  height: 7px;
+  border: 1px solid var(--encre);
+  border-radius: 50%;
+  background: var(--ivoire);
+}
+
+.recit__texte {
+  grid-column: 2;
+  margin: 0;
+  padding-left: var(--ecart);
+  max-width: calc(33em + var(--ecart));
+}
+
+/* Le portrait : accroché sur le fil, dans l'axe, avant le premier nœud.
+   La photo couvre le fil ; la légende se range au pied, à gauche, comme dans un catalogue,
+   et le fil reprend à côté d'elle jusqu'au premier nœud. */
+.portrait {
+  position: relative;
+  width: clamp(16rem, 25vw, 24rem);
+  margin: 0 auto clamp(4rem, 11svh, 7rem);
+}
+.portrait__photo {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: #d9d3c6;
+  box-shadow: 0 1px 2px rgb(27 25 22 / .12), 0 18px 40px -22px rgb(27 25 22 / .45);
+}
+.portrait__legende {
+  margin-top: .95rem;
+  font: 400 .8125rem/1.4 var(--sans);
+  letter-spacing: .06em;
+  color: var(--usuzumi);
+}
+
+/* Il se pose une fois, quand il entre à l'écran (classe posée par le script, jamais en mouvement réduit) */
+@media (prefers-reduced-motion: no-preference) {
+  .portrait.attend .portrait__photo,
+  .portrait.attend .portrait__legende {
+    transition: opacity 1.1s var(--lent), transform 1.4s var(--lent);
+  }
+  .portrait.attend .portrait__legende { transition-delay: .25s; }
+  .portrait.attend:not(.est-vu) .portrait__photo { opacity: 0; transform: translateY(1.5rem); }
+  .portrait.attend:not(.est-vu) .portrait__legende { opacity: 0; transform: translateY(.5rem); }
+}
+
+@media (max-width: 48rem) {
+  .portrait {
+    width: min(100% - var(--ecart), 21rem);
+    margin: 0 0 3.5rem var(--ecart);
+  }
+  .portrait__legende { margin-top: .85rem; }
+}
+
+@media (max-width: 48rem) {
+  .recit { --ecart: 1.75rem; }
+  .recit::before { left: var(--gouttiere); }
+  .recit__bloc { grid-template-columns: 1fr; }
+  .recit__titre, .recit__texte { grid-column: 1; padding: 0 0 0 var(--ecart); text-align: left; }
+  .recit__titre { margin-bottom: .75rem; }
+  .recit__titre::after { right: auto; left: -4px; }
+}
+
+/* Le fil s'encre au fil de la lecture (navigateurs qui le savent) */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .recit::before {
+      animation: tracer linear both;
+      animation-timeline: view();
+      animation-range: cover 25vh cover calc(100% - 75vh);
+    }
+  }
+}
+
+/* ───────────────────────── La description musée ───────────────────────── */
+
+.musee {
+  padding: clamp(5rem, 14svh, 9rem) var(--gouttiere) clamp(5rem, 14svh, 9rem);
+}
+
+.musee__corps {
+  max-width: 74rem;
+  margin: 0 auto;
+}
+
+.musee__titre {
+  margin: 0 0 clamp(2rem, 5svh, 3rem);
+  font: 500 clamp(1.875rem, 3.4vw, 2.875rem)/1.15 var(--serif);
+  letter-spacing: -.012em;
+}
+
+.musee__rang {
+  display: grid;
+  grid-template-columns: minmax(0, 37rem) minmax(0, 1fr);
+  column-gap: clamp(2.5rem, 7vw, 6.5rem);
+  align-items: start;
+}
+.musee__rang + .musee__rang { margin-top: 1.6rem; }
+.musee__rang p {
+  grid-column: 1;
+  margin: 0;
+  font-size: clamp(1.1875rem, 1.45vw, 1.3125rem);
+  line-height: 1.78;
+}
+
+.vignettes {
+  grid-column: 2;
+  display: flex;
+  gap: clamp(.6rem, 1.2vw, 1rem);
+  margin: .55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.vignettes li { flex: 0 1 9rem; min-width: 0; }
+
+.vignette {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: zoom-in;
+}
+.vignette img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition: transform .5s cubic-bezier(.2, .6, .2, 1);
+}
+.vignette:hover img { transform: translateY(-3px); }
+.vignette__titre {
+  display: block;
+  margin-top: .5rem;
+  font: 400 .8125rem/1.4 var(--sans);
+  color: var(--usuzumi);
+}
+
+.musee__synthese {
+  position: relative;
+  margin: clamp(4rem, 10svh, 6.5rem) 0 0;
+  padding-top: clamp(5.5rem, 13svh, 8rem);
+  font: 400 clamp(1.375rem, 2.5vw, 2.125rem)/1.42 var(--serif);
+  letter-spacing: -.004em;
+  text-align: center;
+  text-wrap: balance;
+}
+.musee__synthese::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 1px;
+  height: clamp(4rem, 10svh, 6rem);
+  background: var(--filet);
+}
+.musee__synthese span { display: block; }
+@media (max-width: 40rem) {
+  .musee__synthese { text-align: left; }
+  .musee__synthese::before { left: 0; }
+}
+
+@media (max-width: 52rem) {
+  .musee__rang { grid-template-columns: 1fr; }
+  .vignettes { grid-column: 1; margin-top: 1.25rem; margin-bottom: .75rem; }
+  .vignettes li { flex: 1 1 0; }
+}
+
+/* ───────────────────────── Écrire à l'artiste ─────────────────────────
+   L'ombre d'un érable passe sur un mur de washi. La vidéo ne joue que
+   lorsque la section est à l'écran ; en mouvement réduit, l'image fixe. */
+
+.ecrire {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(34rem, 92svh, 58rem);
+  display: grid;
+  place-items: center;
+  padding: clamp(6rem, 16svh, 10rem) var(--gouttiere);
+  text-align: center;
+  background: var(--ivoire);
+}
+
+.ecrire__fond {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ivoire) url("../media/contact-accueil.jpg") center / cover no-repeat;
+}
+.ecrire__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 2.4s ease;
+}
+.ecrire__video.est-lue { opacity: 1; }
+/* La vidéo de William qui peint : présente mais en retrait, derrière le formulaire. */
+.ecrire__video--peinture.est-lue { opacity: .62; }
+
+/* Le voile : l'ivoire de la page déborde sur le mur, et s'épaissit
+   doucement derrière le texte. */
+.ecrire__fond::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom, var(--ivoire) 0, rgb(233 229 220 / 0) 22%),
+    radial-gradient(ellipse 58% 64% at 50% 56%, rgb(233 229 220 / .84), rgb(233 229 220 / .6) 62%, rgb(233 229 220 / .26));
+}
+
+.ecrire__corps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 46rem;
+}
+
+.ecrire__phrase {
+  margin: 0;
+  font: 500 clamp(1.625rem, 3.2vw, 2.625rem)/1.32 var(--serif);
+  letter-spacing: -.004em;
+  text-wrap: balance;
+}
+
+.ecrire__mot {
+  width: min(100%, 38rem);
+  margin-top: clamp(2.25rem, 5.5svh, 3.25rem);
+}
+/* Le formulaire : l'encre sur le papier, l'erreur au rouge des sceaux. */
+.ecrire .mot,
+.ecrire .mot__merci {
+  --mot-encre: var(--encre);
+  --mot-ligne: rgb(27 25 22 / .36);
+  --mot-trait: var(--encre);
+  --mot-label: var(--usuzumi);
+  --mot-faux: #9b2f1d;
+  --mot-sceau: #a8361f;
+  --mot-sceau-encre: var(--ivoire);
+  --mot-sceau-texte: "済";
+  --mot-sceau-rayon: 3px;
+  --mot-sceau-angle: -4deg;
+  --mot-fonte: var(--serif);
+  --mot-fonte-ui: var(--sans);
+  --mot-fonte-titre: var(--serif);
+}
+.ecrire__bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  min-width: 10rem;
+  padding: .9rem 2.25rem;
+  border: 1px solid var(--encre);
+  border-radius: 0;
+  background: rgb(246 245 241 / .55);
+  color: var(--encre);
+  font: 500 1.0625rem/1.2 var(--serif);
+  letter-spacing: .03em;
+  text-decoration: none;
+  transition: background-color .6s var(--lent), color .6s var(--lent);
+}
+.ecrire__bouton:hover,
+.ecrire__bouton:focus-visible { background: var(--encre); color: var(--ivoire); }
+.ecrire__bouton:focus-visible { outline-offset: 5px; }
+@media (max-width: 30rem) {
+  .ecrire__bouton { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ecrire__video { display: none; }
+}
+
+/* ───────────────────────── Pied de page ───────────────────────── */
+
+.pied {
+  background: var(--encre);
+  color: var(--ivoire);
+  padding: clamp(3.5rem, 9svh, 5.5rem) var(--gouttiere) 2rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+}
+
+.pied__corps {
+  max-width: 74rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+
+.pied__maison p {
+  margin: .35rem 0 0;
+  font-size: 1rem;
+  color: #a8a194;
+}
+
+.nav--pied { flex-direction: column; gap: 0; }
+.nav--pied a { color: #c9c2b4; padding: .3rem 0; }
+.nav--pied a:hover, .nav--pied a[aria-current="page"] { color: var(--ivoire); }
+.nav--pied a[aria-current="page"] { text-decoration: none; }
+
+.pied__contact {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.pied__contact li + li { margin-top: .7rem; }
+.pied .lien { text-decoration-color: rgb(233 229 220 / .35); }
+.pied .lien:hover { text-decoration-color: var(--ivoire); }
+
+.pied__mention {
+  max-width: 74rem;
+  margin: clamp(3rem, 8svh, 4.5rem) auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(233 229 220 / .14);
+  font: 400 .8125rem/1.5 var(--sans);
+  color: #8f897d;
+}
+
+@media (max-width: 48rem) {
+  .pied__corps { grid-template-columns: 1fr; }
+}
+
+/* ───────────────────────── Visionneuse ───────────────────────── */
+
+.visionneuse {
+  width: 100vw;
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: #12110f;
+  color: var(--ivoire);
+  overflow: hidden;
+}
+.visionneuse[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+.visionneuse::backdrop { background: #12110f; }
+
+.visionneuse__barre {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.25rem;
+  padding: calc(.75rem + env(safe-area-inset-top)) var(--gouttiere) .5rem;
+}
+.visionneuse__bouton {
+  min-height: 2.75rem;
+  padding: .5rem .25rem;
+  border: 0;
+  border-bottom: 1px solid rgb(233 229 220 / .35);
+  background: none;
+  font: 500 1rem/1 var(--serif);
+  cursor: pointer;
+}
+.visionneuse__bouton:hover { border-bottom-color: var(--ivoire); }
+
+.visionneuse__vue {
+  min-height: 0;
+  overflow: auto;
+  padding: 0 var(--gouttiere);
+  overscroll-behavior: contain;
+}
+.visionneuse__vue:focus-visible { outline-offset: -4px; }
+.visionneuse__image {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+.visionneuse.est-zoom .visionneuse__vue { padding: 0; }
+.visionneuse.est-zoom .visionneuse__image { height: auto; max-width: none; object-fit: fill; cursor: zoom-out; }
+
+.visionneuse__cartel {
+  padding: 1rem var(--gouttiere) calc(1.25rem + env(safe-area-inset-bottom));
+  max-width: 46rem;
+}
+.visionneuse__titre { margin: 0; font: 500 1.375rem/1.3 var(--serif); }
+.visionneuse__cartel p { margin: .2rem 0 0; font: 400 .875rem/1.55 var(--sans); color: #b9b2a5; }
+.visionneuse__cartel .visionneuse__scene { margin-top: .6rem; font: 400 1rem/1.6 var(--serif); color: #d8d1c3; }
+@media (max-height: 40rem), (max-width: 40rem) {
+  .visionneuse__scene { display: none; }
+}

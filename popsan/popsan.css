@@ -1,0 +1,848 @@
+/* williamsan.art v1 : Popsan
+   Une pièce sombre. Le noir n'est pas un fond, c'est la nuit d'où sortent les toiles :
+   chacune s'éclaire depuis la source qu'elle peint (une lanterne, une lune, une fleur),
+   puis reste accrochée au mur, en pleine lumière, avec son ombre.
+
+   Couches : mur (0) < toile et son ombre (1) < calque de nuit (2) < textes (3) < en-tête (30) */
+
+/* La ponctuation latine des polices japonaises est trop large : elle vient d'une serif ou d'une linéale du système. */
+@font-face {
+  font-family: "Ponct Serif";
+  src: local("Georgia"), local("Times New Roman"), local("Noto Serif");
+  unicode-range: U+00AB, U+00BB, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+202F;
+}
+@font-face {
+  font-family: "Ponct Sans";
+  src: local("Helvetica Neue"), local("Arial"), local("Roboto");
+  unicode-range: U+00AB, U+00BB, U+00D7, U+2013-2014, U+2018-2019, U+201C-201D, U+2026, U+202F;
+}
+
+:root {
+  color-scheme: dark;
+  --nuit: #070706;          /* la pièce avant la lumière, un cran sous le noir d'Akari */
+  --mur: #100e0b;           /* le mur une fois la lumière venue : un noir brun, celui des fonds de Tsuki et de Kingyo */
+  --ivoire: #eee6d5;
+  --ivoire-doux: #d4cbba;
+  --cendre: #9d9486;
+  --filet: #2f2a23;
+  --or: #c9a45c;            /* en touche rare : le focus, la sélection */
+
+  --serif: "Ponct Serif", "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Iowan Old Style", Georgia, serif;
+  --sans: "Ponct Sans", "Zen Kaku Gothic New", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+
+  --g: clamp(1rem, 4.5vw, 3.5rem);
+  --entete: 4.25rem;          /* hauteur de l'en-tête sur grand écran ; 6,4 rem sur deux lignes, en dessous de 40 rem */
+  --doux: cubic-bezier(.2, .7, .2, 1);
+
+  /* Échelle : quarte (1,333), base 17 px */
+  --t-cartel: .8125rem;
+  --t-ui: .875rem;
+  --t-corps: 1.0625rem;
+  --t-lead: clamp(1.125rem, 1rem + .35vw, 1.25rem);
+  --t-sous: clamp(1.25rem, 1.05rem + .7vw, 1.6875rem);
+  --t-h2: clamp(2.125rem, 1.4rem + 2.6vw, 3.5rem);
+  --t-h1: clamp(3rem, 1.8rem + 4.4vw, 5.75rem);
+  --t-manifeste: clamp(2.375rem, 1.2rem + 4.6vw, 5.5rem);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  background: var(--mur);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* Sans cette ligne, le clip de body passe à la fenêtre et ne retient plus le halo
+     de la fiche (440 px sur un écran de 360) avant son premier placement. */
+  overflow-x: clip;
+}
+html:has(dialog[open]) { overflow: hidden; }
+
+body {
+  margin: 0;
+  background: var(--mur);
+  color: var(--ivoire);
+  font: 400 var(--t-corps)/1.85 var(--serif);
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+cite { font-style: italic; }
+sup { position: relative; top: -.42em; font-size: .68em; line-height: 0; vertical-align: baseline; }
+::selection { background: var(--or); color: var(--nuit); }
+:focus-visible { outline: 1px solid var(--or); outline-offset: 5px; border-radius: 1px; }
+
+.sr {
+  position: absolute !important;
+  width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+.evitement {
+  position: fixed; z-index: 60; top: .75rem; left: .75rem;
+  padding: .6rem 1rem;
+  background: var(--ivoire); color: var(--nuit);
+  font: 500 var(--t-ui)/1.2 var(--sans);
+  text-decoration: none;
+  transform: translateY(-200%);
+}
+.evitement:focus { transform: none; }
+
+/* ═══════════════════════════ En-tête : identique sur tout le site (mêmes mesures que l'accueil) ═══════════════════════════
+   Seules les couleurs changent : ivoire sur la nuit de Popsan. */
+
+.entete {
+  position: absolute;
+  z-index: 30;
+  inset: 0 0 auto 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  padding: calc(1.25rem + env(safe-area-inset-top)) var(--g) 1rem;
+}
+
+.marque {
+  font: 500 1.1875rem/1.2 var(--serif);
+  letter-spacing: .01em;
+  color: var(--ivoire);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem clamp(1.1rem, 2.4vw, 2.25rem);
+}
+.nav a {
+  font: 400 1rem/1.2 var(--serif);
+  color: var(--cendre);
+  text-decoration: none;
+  padding: .5rem 0;
+  transition: color .25s ease;
+}
+.nav a:hover { color: var(--ivoire); }
+.nav a[aria-current="page"] {
+  color: var(--ivoire);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .45em;
+}
+
+@media (max-width: 40rem) {
+  :root { --entete: 6.4rem; }
+  .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
+  .entete .nav { justify-content: space-between; gap: 0; }
+  .entete .nav a { font-size: .9375rem; }
+}
+
+/* ═══════════════════════════ Les toiles : mur, ombre portée, calque de nuit ═══════════════════════════ */
+
+.toile { position: relative; z-index: 1; display: block; }
+.toile__peinture { position: relative; display: block; overflow: hidden; background: var(--nuit); }
+.toile__peinture img { width: 100%; }
+
+/* L'ombre portée : la toile se décolle du mur. Discrète, et seulement quand la lumière est là. */
+.toile__ombre {
+  position: absolute;
+  inset: 2.5%;
+  z-index: -1;
+  background: #000;
+  box-shadow: 0 0 var(--flou, 22px) calc(var(--flou, 22px) * .4) #000;
+  opacity: .7;
+  transform: translate3d(0, 2%, 0);
+  pointer-events: none;
+}
+.anime .toile__ombre { opacity: 0; will-change: transform, opacity; }
+
+.nuit { display: none; pointer-events: none; }
+
+/* La lueur de la lanterne peinte sur le mur, au-dessus du calque de nuit. */
+.halo { display: none; }
+.anime .halo {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 40rem;
+  height: 40rem;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 186 112 / .2), rgb(255 158 82 / .07) 42%, rgb(255 150 70 / .02) 70%, rgb(255 150 70 / 0));
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.anime [data-teinte] > .halo {
+  background: radial-gradient(closest-side, rgb(var(--feu) / .2), rgb(var(--feu) / .07) 42%, rgb(var(--feu) / .02) 70%, rgb(var(--feu) / 0));
+}
+.anime .nuit { display: block; position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* La lanterne peinte s'avive quand la main s'en approche. Éteinte, la toile est intacte. */
+.toile__feu {
+  position: absolute;
+  left: calc(var(--sx, .5) * 100%);
+  top: calc(var(--sy, .5) * 100%);
+  width: 62%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 200 120 / .95), rgb(255 150 60 / .42) 45%, rgb(255 140 50 / 0) 100%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  pointer-events: none;
+}
+[data-teinte] .toile__feu { background: radial-gradient(closest-side, rgb(var(--feu) / .9), rgb(var(--feu) / .38) 45%, rgb(var(--feu) / 0) 100%); }
+
+/* ═══════════════════════════ Cartels ═══════════════════════════ */
+
+.cartel { font-family: var(--sans); }
+.cartel p { margin: 0; }
+.cartel__titre {
+  margin: 0;
+  font: 500 1.3125rem/1.3 var(--serif);
+  letter-spacing: .005em;
+  color: var(--ivoire);
+}
+.cartel__titre a { text-decoration: none; }
+.cartel__titre a:hover { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: .3em; text-decoration-color: var(--cendre); }
+.cartel__sens { font: 400 var(--t-ui)/1.5 var(--serif); color: var(--ivoire-doux); }
+.cartel__ligne { font-size: var(--t-cartel); line-height: 1.6; color: var(--cendre); }
+.cartel__statut {
+  margin-top: .3rem !important;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .15rem 1rem;
+  font-size: var(--t-cartel);
+  line-height: 1.6;
+  color: var(--ivoire-doux);
+}
+
+/* « Vendue » : un filet d'or et le mot, sans pastille ni bandeau ; dessous, où, en petit.
+   C'est la seule touche d'or des cartels : elle dit que l'œuvre a trouvé sa maison. */
+.vendue {
+  display: grid;
+  grid-template-columns: 1.5rem auto;
+  column-gap: .6rem;
+  align-items: center;
+  justify-content: start;
+  margin: .55rem 0 0 !important;
+}
+.vendue::before {
+  content: "";
+  grid-row: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgb(201 164 92 / .15), var(--or));
+}
+.vendue__mot {
+  grid-column: 2;
+  margin: 0;
+  font: 400 .9375rem/1.4 var(--serif);
+  letter-spacing: .09em;
+  color: var(--or);
+}
+.vendue__ou {
+  grid-column: 2;
+  margin: .05rem 0 0;
+  font: 400 var(--t-cartel)/1.5 var(--sans);
+  color: var(--cendre);
+}
+.vendue--grande { grid-template-columns: 2.75rem auto; column-gap: .9rem; margin-top: 2.1rem !important; }
+.vendue--grande .vendue__mot { font-size: 1.5rem; line-height: 1.3; letter-spacing: .1em; }
+.vendue--grande .vendue__ou { margin-top: .3rem; font-size: .9375rem; color: var(--ivoire-doux); max-width: 22rem; }
+
+/* L'appel : une bulle de papier ; au survol ou au doigt, une lanterne s'y allume. */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .55rem 1.15rem;
+  margin-top: .75rem;
+}
+.appel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 1px solid rgb(238 230 213 / .34);
+  border-radius: 999px;
+  font: 400 var(--t-cartel)/1.2 var(--sans);
+  letter-spacing: .02em;
+  color: var(--ivoire);
+  text-decoration: none;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: border-color .6s var(--doux);
+}
+.appel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 50%;
+  left: 0;
+  width: 120%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgb(255 190 118 / .34), rgb(255 160 84 / .12) 55%, rgb(255 150 70 / 0));
+  opacity: 0;
+  translate: -45% -50%;
+  transition: opacity .7s var(--doux), translate 1.1s var(--doux);
+  pointer-events: none;
+}
+.appel:hover, .appel:focus-visible, .appel:active { border-color: rgb(201 164 92 / .85); }
+.appel:hover::before, .appel:focus-visible::before, .appel:active::before { opacity: 1; translate: -20% -50%; }
+.appel--grand {
+  min-height: 3.25rem;
+  padding: 0 1.75rem;
+  font-size: var(--t-ui);
+  border-color: rgb(238 230 213 / .55);
+}
+/* Deux colonnes sur un petit téléphone : l'appel tient dans sa carte, sans jamais déborder. */
+.appel { max-width: 100%; }
+@media (max-width: 24rem) {
+  .oeuvre .appel { padding: 0 .7rem; font-size: .75rem; letter-spacing: 0; }
+}
+/* Sur la fiche, la lanterne de l'appel veille déjà, à peine. */
+.appel--grand::before { opacity: .38; }
+
+.lien {
+  font: 400 var(--t-ui)/1.4 var(--sans);
+  letter-spacing: .01em;
+  color: var(--ivoire);
+  text-decoration: underline;
+  text-decoration-color: var(--cendre);
+  text-decoration-thickness: 1px;
+  text-underline-offset: .4em;
+  transition: text-decoration-color .3s ease;
+}
+.lien:hover { text-decoration-color: var(--ivoire); }
+
+.bouton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0 1.6rem;
+  border: 1px solid var(--ivoire);
+  border-radius: 999px;
+  color: var(--ivoire);
+  font: 500 var(--t-ui)/1.2 var(--sans);
+  letter-spacing: .02em;
+  text-decoration: none;
+  transition: background-color .35s ease, color .35s ease;
+}
+.bouton:hover { background: var(--ivoire); color: var(--nuit); }
+
+/* ═══════════════════════════ La salle : « Je donne une ombre aux images du Japon. » ═══════════════════════════
+   Sans script ou en mouvement réduit : une page calme, tout est visible.
+   Avec .anime, la scène reste collée le temps d'un écran de défilement, et Akari sort du noir. */
+
+.salle { position: relative; }
+.salle__scene {
+  position: relative;
+  min-height: 100svh;
+  padding: calc(var(--entete) + env(safe-area-inset-top) + 1.25rem) var(--g) 2.5rem;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: 1.5rem;
+  isolation: isolate;
+}
+.salle__texte { display: contents; }
+.manifeste { order: 0; }
+.salle .toile { order: 1; }
+.salle__cartel { order: 2; }
+.manifeste {
+  position: relative;
+  z-index: 3;
+  margin: 0;
+  max-width: 11ch;
+  font: 500 var(--t-manifeste)/1.08 var(--serif);
+  letter-spacing: -.018em;
+  text-wrap: balance;
+  hanging-punctuation: first;
+}
+.salle .toile { width: min(100%, calc(100svh - 22rem)); min-width: min(100%, 17rem); justify-self: center; }
+.salle__cartel { position: relative; z-index: 3; justify-self: start; }
+.salle__cartel .lien { display: inline-block; margin-top: .7rem; }
+.salle .nuit { z-index: 2; }
+
+.anime .salle { height: 200svh; }
+.anime .salle__scene {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+.anime .salle__cartel { opacity: 0; }
+.anime .salle__cartel:not(.est-visible) { pointer-events: none; }
+.anime .salle__cartel:focus-within { opacity: 1 !important; }
+
+/* Écran large et couché : le manifeste à gauche, la toile à droite, le cartel au pied du texte. */
+@media (min-width: 56rem) and (min-aspect-ratio: 1/1) {
+  .salle__scene {
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: clamp(2.5rem, 6vw, 6.5rem);
+    row-gap: 0;
+    align-content: center;
+    padding-bottom: 2rem;
+  }
+  .salle .toile {
+    width: min(calc(100svh - var(--entete) - 4.5rem), 54vw);
+    min-width: 0;
+    align-self: center;
+  }
+  .salle__texte {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-self: stretch;
+    gap: 2rem;
+  }
+  .manifeste { margin-top: -.12em; }
+}
+
+/* ═══════════════════════════ Popsan : le titre et l'introduction ═══════════════════════════ */
+
+.section { padding: 0 var(--g); max-width: 92rem; margin: 0 auto; }
+
+.intro {
+  padding-top: clamp(5rem, 13svh, 9rem);
+  padding-bottom: clamp(3.5rem, 9svh, 6rem);
+  display: grid;
+  gap: 1.75rem;
+}
+.intro h1 {
+  margin: 0;
+  font: 500 var(--t-h1)/1 var(--serif);
+  letter-spacing: -.02em;
+}
+.intro__sous {
+  margin: 1rem 0 0;
+  font: 400 var(--t-sous)/1.35 var(--serif);
+  color: var(--ivoire-doux);
+  text-wrap: balance;
+}
+.texte p {
+  margin: 0 0 1.2em;
+  max-width: 34em;
+  font-size: var(--t-lead);
+  line-height: 1.85;
+  color: var(--ivoire-doux);
+  hanging-punctuation: first;
+}
+.texte p:last-child { margin-bottom: 0; }
+
+@media (min-width: 64rem) {
+  .intro { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); column-gap: clamp(2.5rem, 6vw, 6.5rem); align-items: start; }
+  .intro .texte { padding-top: .9rem; }
+}
+
+/* ═══════════════════════════ L'accrochage ═══════════════════════════ */
+
+.accrochage {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.75rem 1rem;
+  align-items: start;
+}
+@media (min-width: 48rem) { .accrochage { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4rem clamp(1.5rem, 3.2vw, 3.25rem); } }
+
+.oeuvre { margin: 0; }
+.oeuvre .cartel { margin-top: 1.1rem; }
+/* Les toiles d'un même rang reposent sur la même ligne, et leurs cartels commencent à la même hauteur. */
+@supports (grid-template-rows: subgrid) {
+  .accrochage, .paire { grid-auto-rows: auto; }
+  .accrochage > .oeuvre, .paire > .oeuvre { display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; }
+  .oeuvre > .toile { align-self: end; }
+}
+.oeuvre__lien { display: block; text-decoration: none; cursor: zoom-in; }
+.oeuvre__lien--fiche { cursor: pointer; }
+.oeuvre__lien:focus-visible { outline-offset: 6px; }
+.oeuvre__voir { display: inline-block; margin-top: .55rem; }
+
+.oeuvres { padding-bottom: clamp(4rem, 10svh, 7rem); }
+
+/* Nuits et Kintsugi : un texte, deux œuvres */
+.salle-2 {
+  padding-top: clamp(4.5rem, 12svh, 8.5rem);
+  padding-bottom: clamp(4rem, 10svh, 7rem);
+  border-top: 1px solid var(--filet);
+  display: grid;
+  gap: 2.5rem;
+}
+.salle-2 h2 {
+  margin: 0;
+  font: 500 var(--t-h2)/1.04 var(--serif);
+  letter-spacing: -.016em;
+}
+.salle-2__sous {
+  margin: .8rem 0 0;
+  font: 400 var(--t-sous)/1.35 var(--serif);
+  color: var(--ivoire-doux);
+}
+.salle-2 .texte { margin-top: 1.6rem; }
+.salle-2 .texte p { font-size: var(--t-corps); }
+.paire { list-style: none; margin: 0; padding: 0; display: grid; gap: 3rem 1.5rem; align-items: start; }
+
+@media (min-width: 40rem) { .paire { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 64rem) {
+  .salle-2 { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: clamp(2.5rem, 5vw, 5.5rem); align-items: start; }
+  .paire { gap: 3rem clamp(1.5rem, 3.2vw, 3.25rem); }
+}
+
+/* ═══════════════════════════ Écrire à William San : la flamme dans la lanterne ═══════════════════════════
+   Une vidéo muette en boucle lente, sous un voile ; sans mouvement (ou avant qu'elle joue), son image fixe.
+   Devant, d'un seul tenant : la phrase, le formulaire, et William San interviewé sur son stand à Monaco,
+   accroché comme une toile (la photo telle quelle, sans filtre). */
+
+.ecrire {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(34rem, 92svh, 60rem);
+  display: grid;
+  align-items: end;
+  padding: clamp(7rem, 18svh, 11rem) var(--g) clamp(3.5rem, 10svh, 6.5rem);
+  background: var(--nuit);
+}
+.ecrire__fond {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--nuit) url("../media/contact-popsan.jpg") 50% 50% / cover no-repeat;
+}
+.ecrire__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+}
+.ecrire__video.joue { opacity: 1; }
+.ecrire__voile {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, var(--mur) 0%, rgb(16 14 11 / 0) 24%),
+    linear-gradient(0deg, rgb(7 7 6 / .88) 0%, rgb(7 7 6 / .5) 40%, rgb(7 7 6 / .1) 72%),
+    linear-gradient(90deg, rgb(7 7 6 / .82) 0%, rgb(7 7 6 / .55) 42%, rgb(7 7 6 / .08) 72%);
+}
+.ecrire__corps {
+  width: 100%;
+  max-width: 92rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "phrase" "photo" "mot";
+  gap: clamp(2rem, 5svh, 2.75rem);
+}
+.ecrire__phrase {
+  grid-area: phrase;
+  margin: 0;
+  max-width: 24ch;
+  font: 500 var(--t-h2)/1.14 var(--serif);
+  letter-spacing: -.012em;
+  text-wrap: balance;
+  text-shadow: 0 1px 24px rgb(7 7 6 / .6);
+}
+
+/* La photo : accrochée au mur de nuit, sa légende en cartel dessous. */
+.ecrire__photo {
+  grid-area: photo;
+  justify-self: end;
+  width: min(68%, 15rem);
+  margin: 0;
+}
+.ecrire__photo img {
+  width: 100%;
+  aspect-ratio: 1600 / 2134;
+  object-fit: cover;
+  background: var(--mur);
+  box-shadow: 0 2.5rem 4rem -2rem #000, 0 0 0 1px rgb(238 230 213 / .06);
+}
+.ecrire__legende {
+  margin-top: 1rem;
+  font: 400 var(--t-cartel)/1.55 var(--sans);
+  letter-spacing: .01em;
+  color: var(--ivoire-doux);
+  text-wrap: balance;
+}
+.ecrire__legende::before {
+  content: "";
+  display: block;
+  width: 2.25rem;
+  height: 1px;
+  margin-bottom: .75rem;
+  background: var(--cendre);
+  opacity: .6;
+}
+
+.ecrire__mot {
+  grid-area: mot;
+  max-width: 38rem;
+}
+/* Le formulaire : ivoire sur la nuit, la ligne s'allume d'or sous la main. */
+.ecrire .mot,
+.ecrire .mot__merci {
+  --mot-encre: var(--ivoire);
+  --mot-ligne: rgb(238 230 213 / .34);
+  --mot-trait: var(--or);
+  --mot-trait-texte: #dcc08a;
+  --mot-label: #b4ab9b;
+  --mot-faux: #f2a882;
+  --mot-sceau: radial-gradient(circle closest-side, rgb(255 214 150 / .95), rgb(255 170 84 / .55) 45%, rgb(255 150 70 / 0));
+  --mot-fonte: var(--serif);
+  --mot-fonte-label: var(--serif);
+  --mot-fonte-ui: var(--sans);
+  --mot-fonte-titre: var(--serif);
+}
+.ecrire .appel { background: rgb(7 7 6 / .35); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ecrire .mot__envoyer { min-width: 9.5rem; font-size: var(--t-ui); }
+.ecrire .mot__secours a:focus-visible,
+.ecrire .mot__encore:focus-visible { outline: 1px solid var(--or); outline-offset: 4px; }
+
+@media (min-width: 60rem) {
+  .ecrire__corps {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas: "phrase photo" "mot photo";
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(3rem, 7vw, 8rem);
+    row-gap: clamp(2rem, 5svh, 3rem);
+    align-items: end;
+  }
+  .ecrire__phrase { align-self: end; }
+  .ecrire__photo { width: min(100%, 24rem); align-self: end; }
+  .ecrire__mot { align-self: end; }
+}
+
+/* ═══════════════════════════ Pied de page : même structure que l'accueil ═══════════════════════════ */
+
+.pied {
+  background: var(--nuit);
+  color: var(--ivoire);
+  padding: clamp(3.5rem, 9svh, 5.5rem) var(--g) 2rem;
+  padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--filet);
+}
+.pied__corps {
+  max-width: 74rem;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.2fr;
+  gap: 2.5rem clamp(2rem, 5vw, 5rem);
+  align-items: start;
+}
+.pied__maison p { margin: .35rem 0 0; font-size: 1rem; color: var(--cendre); }
+.nav--pied { flex-direction: column; gap: 0; }
+.nav--pied a { color: #c9c2b4; padding: .3rem 0; }
+.nav--pied a:hover, .nav--pied a[aria-current="page"] { color: var(--ivoire); }
+.nav--pied a[aria-current="page"] { text-decoration: none; }
+.pied__contact { margin: 0; padding: 0; list-style: none; font-size: 1rem; line-height: 1.5; }
+.pied__contact li + li { margin-top: .7rem; }
+.pied__contact .lien { font: inherit; text-underline-offset: .28em; text-decoration-color: rgb(238 230 213 / .35); }
+.pied__contact .lien:hover { text-decoration-color: var(--ivoire); }
+.pied__mention {
+  max-width: 74rem;
+  margin: clamp(3rem, 8svh, 4.5rem) auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgb(238 230 213 / .12);
+  font: 400 var(--t-cartel)/1.5 var(--sans);
+  color: #8f897d;
+}
+@media (max-width: 48rem) { .pied__corps { grid-template-columns: 1fr; } }
+
+/* ═══════════════════════════ Fiche œuvre ═══════════════════════════ */
+
+.fiche { padding: calc(var(--entete) + env(safe-area-inset-top) + 1.5rem) var(--g) 0; max-width: 92rem; margin: 0 auto; }
+.fiche__retour {
+  position: relative;
+  z-index: 3;
+  display: inline-block;
+  margin-bottom: 1.75rem;
+  padding: .4rem 0;
+  font: 400 var(--t-ui)/1.4 var(--sans);
+  color: var(--cendre);
+  text-decoration: none;
+}
+.fiche__retour:hover { color: var(--ivoire); }
+
+.fiche__haut { position: relative; display: grid; gap: 2.25rem; }
+.fiche__toile { margin: 0; position: relative; }
+.fiche__toile .oeuvre__lien { cursor: zoom-in; }
+.nuit--plein { z-index: 2; }
+.anime .nuit--plein { position: fixed; inset: 0; width: 100vw; height: 100vh; }
+
+.cartel-musee { position: relative; z-index: 3; font-family: var(--sans); }
+.cartel-musee h1 {
+  margin: 0;
+  font: 500 var(--t-h1)/1 var(--serif);
+  letter-spacing: -.02em;
+}
+.cartel-musee dl { margin: 1.75rem 0 0; font-size: .9375rem; line-height: 1.5; }
+.cartel-musee dl div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: .7rem 0;
+  border-bottom: 1px solid var(--filet);
+}
+.cartel-musee dl div:first-child { border-top: 1px solid var(--filet); }
+.cartel-musee dt { color: var(--cendre); }
+.cartel-musee dd { margin: 0; color: var(--ivoire); }
+.cartel-musee__sens { margin: .7rem 0 0; font: 400 var(--t-sous)/1.35 var(--serif); color: var(--ivoire-doux); }
+.cartel-musee .actions { margin-top: 2rem; gap: .9rem 1.6rem; }
+.agrandir {
+  display: block;
+  margin-top: 1rem;
+  padding: .5rem 0;
+  border: 0;
+  background: none;
+  font: 400 var(--t-ui)/1.4 var(--sans);
+  color: var(--cendre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .4em;
+  cursor: zoom-in;
+}
+.agrandir:hover { color: var(--ivoire); }
+.agrandir[hidden] { display: none; }
+
+@media (min-width: 60rem) {
+  .fiche__haut { grid-template-columns: auto minmax(16rem, 1fr); column-gap: clamp(2.5rem, 6vw, 6rem); align-items: end; }
+  .fiche__toile { width: min(calc(100svh - var(--entete) - 7rem), 56vw); }
+  .cartel-musee { padding-bottom: .25rem; max-width: 26rem; }
+}
+
+.bloc {
+  padding: clamp(4.5rem, 12svh, 8rem) 0 0;
+  display: grid;
+  gap: 1.5rem;
+}
+.bloc h2 {
+  margin: 0;
+  font: 400 var(--t-sous)/1.3 var(--serif);
+  color: var(--ivoire-doux);
+}
+@media (min-width: 60rem) {
+  .bloc { grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: clamp(2.5rem, 6vw, 6rem); }
+}
+.bloc .texte p { font-size: var(--t-lead); }
+
+.details { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 1rem; }
+@media (min-width: 40rem) { .details { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 60rem) { .details { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1.25rem; } }
+.detail { display: block; text-decoration: none; cursor: zoom-in; }
+.detail__vue { position: relative; display: block; aspect-ratio: 1; overflow: hidden; background: var(--nuit); }
+.detail__vue img { position: absolute; max-width: none; height: auto; }
+.detail__vue img.detail__photo { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.detail__nom { display: block; margin-top: .75rem; font: 400 var(--t-cartel)/1.5 var(--sans); color: var(--cendre); }
+.detail:hover .detail__nom { color: var(--ivoire); }
+
+.expositions { list-style: none; margin: 0; padding: 0; font-family: var(--sans); max-width: 40rem; }
+.expositions li { display: grid; gap: .1rem; padding: .9rem 0; border-top: 1px solid var(--filet); border-bottom: 1px solid var(--filet); font-size: .9375rem; line-height: 1.5; }
+.expositions .lieu { color: var(--ivoire); }
+.expositions .quand { color: var(--cendre); }
+
+.fiche__suite {
+  margin-top: clamp(4.5rem, 12svh, 8rem);
+  padding: 1.75rem 0 clamp(4rem, 10svh, 6.5rem);
+  border-top: 1px solid var(--filet);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem 1.5rem;
+}
+.suite { display: grid; align-content: start; gap: .25rem; padding: .25rem 0; text-decoration: none; }
+.suite--apres { text-align: right; }
+.suite__sens { font: 400 var(--t-cartel)/1.4 var(--sans); color: var(--cendre); }
+.suite__titre { font: 500 var(--t-sous)/1.25 var(--serif); color: var(--ivoire-doux); transition: color .3s ease; }
+.suite:hover .suite__titre { color: var(--ivoire); }
+.suite__tout { grid-column: 1 / -1; justify-self: start; }
+
+/* ═══════════════════════════ La loupe : l'image de 2000 px ═══════════════════════════ */
+
+.loupe {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--nuit);
+  color: var(--ivoire);
+  overflow: hidden;
+}
+.loupe::backdrop { background: var(--nuit); }
+.loupe__vue { position: absolute; inset: 0; overflow: hidden; touch-action: none; cursor: grab; outline: none; }
+.loupe__vue.saisie { cursor: grabbing; }
+.loupe__vue img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  max-width: none;
+  transform-origin: 0 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.loupe__legende {
+  position: absolute;
+  z-index: 2;
+  top: max(1rem, env(safe-area-inset-top));
+  left: var(--g);
+  margin: 0;
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  background: rgb(7 7 6 / .7);
+  font: 400 var(--t-cartel)/1.5 var(--sans);
+  color: var(--ivoire-doux);
+}
+.loupe__commandes {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  display: flex;
+  gap: .4rem;
+  padding: .35rem;
+  border: 1px solid var(--filet);
+  border-radius: 999px;
+  background: rgb(7 7 6 / .78);
+}
+.loupe__commandes button {
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: 400 var(--t-ui)/1 var(--sans);
+  color: var(--ivoire);
+  cursor: pointer;
+}
+.loupe__commandes button:hover { background: rgb(238 230 213 / .1); }
+
+/* Mouvement réduit : aucune transition décorative. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+  .ecrire__video { display: none; }
+}

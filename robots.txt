@@ -1,0 +1,5 @@
+# williamsan.art
+User-agent: *
+Allow: /
+
+Sitemap: https://williamsan.art/sitemap.xml

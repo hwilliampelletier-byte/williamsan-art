@@ -1,0 +1,48 @@
+/* williamsan.art — le sélecteur FR / EN, au bout de la navigation de chaque page.
+   Discret : deux lettres en capitales espacées, plus petites que les liens ; la langue
+   de la page dans la couleur du texte, l'autre dans celle des liens. Il hérite des
+   couleurs de chaque page (ivoire sur la nuit de Popsan, encre sur le papier).
+   Sur téléphone, il monte sur la ligne du nom, à droite : la navigation garde ses
+   cinq liens, comme avant. */
+
+.langue {
+  display: inline-flex;
+  align-items: baseline;
+  align-self: center;
+  gap: .4em;
+  white-space: nowrap;
+  font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+  font-size: .75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: .14em;
+}
+.langue__ici { padding: .5rem 0; color: inherit; }
+.langue__trait { opacity: .4; letter-spacing: 0; }
+.nav .langue a.langue__autre {
+  font: inherit;
+  letter-spacing: inherit;
+  padding: .5rem .1rem;
+}
+.nav .langue a.langue__autre:hover,
+.nav .langue a.langue__autre:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .45em;
+}
+
+@media (max-width: 40rem) {
+  .entete .langue {
+    position: absolute;
+    top: calc(1.25rem + env(safe-area-inset-top));
+    right: var(--g, var(--gouttiere, 1.25rem));
+    height: 1.425rem;                 /* la ligne du mot-symbole : 1.1875rem × 1.2 */
+    align-items: center;
+  }
+  .entete .langue__ici { padding: 0; }
+  .entete .nav .langue a.langue__autre {
+    font-size: inherit;
+    padding: .7rem .5rem;             /* une cible de doigt confortable… */
+    margin: -.7rem -.5rem;            /* …sans rien pousser */
+  }
+}

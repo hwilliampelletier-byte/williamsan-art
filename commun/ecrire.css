@@ -1,0 +1,224 @@
+/* williamsan.art — « Écrire à William San » : la structure du formulaire, commune aux trois pages.
+   Des champs à une seule ligne d'encre, l'étiquette posée dans le champ, qui remonte quand on écrit.
+   Chaque page donne ses couleurs et ses polices par les variables --mot-* (accueil.css, popsan.css, medsan.css). */
+
+.mot {
+  --mot-taille: 1.0625rem;
+  --mot-doux: cubic-bezier(.2, .7, .2, 1);
+  width: 100%;
+  text-align: left;
+  color: var(--mot-encre);
+}
+
+.mot__champs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.35rem clamp(1.25rem, 3vw, 2.25rem);
+}
+.mot__champ--nom,
+.mot__champ--message { grid-column: 1 / -1; }
+@media (max-width: 30rem) {
+  .mot__champs { grid-template-columns: minmax(0, 1fr); }
+}
+
+.mot__champ {
+  position: relative;
+  min-width: 0;
+  padding-top: 1.2rem;              /* la place de l'étiquette remontée */
+}
+
+.mot__saisie {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: .45rem 0 .5rem;
+  border: 0;
+  border-bottom: 1px solid var(--mot-ligne);
+  border-radius: 0;
+  background: transparent linear-gradient(var(--mot-trait), var(--mot-trait)) no-repeat 0 100% / 0 2px;
+  background-origin: border-box;
+  color: var(--mot-encre);
+  caret-color: var(--mot-trait);
+  font: 400 max(16px, var(--mot-taille))/1.5 var(--mot-fonte);   /* jamais sous 16 px : pas de zoom sur iPhone */
+  letter-spacing: .005em;
+  appearance: none;
+  -webkit-appearance: none;
+  box-shadow: none;
+  transition: background-size .55s var(--mot-doux), border-color .3s ease;
+}
+.mot__saisie:focus { outline: none; background-size: 100% 2px; }
+.mot__saisie:focus-visible { outline: none; }
+.mot__saisie[readonly] { cursor: default; }
+
+/* Le message grandit avec ce qu'on écrit (sans script), de trois à une douzaine de lignes. */
+.mot__saisie--message {
+  min-height: calc(1.5em * 3 + .95rem);
+  max-height: 20rem;
+  resize: none;
+  field-sizing: content;
+  overflow-y: auto;
+}
+@supports not (field-sizing: content) {
+  .mot__saisie--message { resize: vertical; }
+}
+
+/* L'étiquette : dans le champ au repos, au-dessus dès qu'on y entre ou qu'il est rempli. */
+.mot__label {
+  position: absolute;
+  left: 0;
+  top: calc(1.2rem + .45rem);
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font: 400 max(16px, var(--mot-taille))/1.5 var(--mot-fonte-label, var(--mot-fonte));
+  color: var(--mot-label);
+  transform-origin: 0 0;
+  pointer-events: none;
+  transition: transform .4s var(--mot-doux), color .3s ease;
+}
+.mot__saisie:focus + .mot__label,
+.mot__saisie:not(:placeholder-shown) + .mot__label,
+.mot__saisie:autofill + .mot__label,
+.mot__saisie:-webkit-autofill + .mot__label { transform: translateY(-1.55rem) scale(.78); }
+.mot__saisie:focus + .mot__label { color: var(--mot-trait-texte, var(--mot-encre)); }
+.mot__facultatif { opacity: .72; }
+
+/* Le remplissage automatique du navigateur garde les couleurs de la page. */
+.mot__saisie:-webkit-autofill,
+.mot__saisie:-webkit-autofill:hover,
+.mot__saisie:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--mot-encre);
+  caret-color: var(--mot-trait);
+  transition: background-color 100000s 0s, background-size .55s var(--mot-doux);
+}
+
+/* Validation douce : la ligne et l'étiquette prennent la couleur de l'erreur, une phrase dit quoi faire. */
+.mot__aide {
+  display: block;
+  font: 400 .8125rem/1.45 var(--mot-fonte-ui);
+  color: var(--mot-faux);
+}
+.mot__aide:empty { display: none; }
+.mot__aide:not(:empty) { margin-top: .45rem; }
+.mot__champ.est-faux .mot__saisie { border-bottom-color: var(--mot-faux); }
+.mot__champ.est-faux .mot__label { color: var(--mot-faux); }
+
+.mot__piege {
+  position: absolute !important;
+  left: -100vw;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.mot__bas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .9rem 1.5rem;
+  margin-top: clamp(1.75rem, 4svh, 2.4rem);
+}
+.mot__envoyer { cursor: pointer; margin: 0; }
+.mot__envoyer[aria-disabled="true"] { cursor: progress; }
+/* Pendant l'envoi : un trait qui file après le mot. */
+.mot__envoyer[aria-disabled="true"] [data-libelle]::after {
+  content: "";
+  display: inline-block;
+  width: 1.3em;
+  height: 1px;
+  margin-left: .6em;
+  vertical-align: .3em;
+  background: currentColor;
+  transform-origin: left;
+  animation: mot-filer .9s ease-in-out infinite alternate;
+}
+@keyframes mot-filer { from { transform: scaleX(.15); } to { transform: scaleX(1); } }
+
+.mot__statut {
+  flex: 1 1 14rem;
+  margin: 0;
+  font: 400 .875rem/1.5 var(--mot-fonte-ui);
+  color: var(--mot-label);
+}
+.mot__statut:empty { display: none; }
+.mot[data-etat="faux"] .mot__statut,
+.mot[data-etat="erreur"] .mot__statut { color: var(--mot-faux); }
+
+.mot__secours {
+  margin: 1.35rem 0 0;
+  font: 400 .8125rem/1.6 var(--mot-fonte-ui);
+  color: var(--mot-label);
+}
+.mot__secours a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .25em;
+  text-decoration-color: var(--mot-ligne);
+  overflow-wrap: anywhere;
+  transition: color .25s ease, text-decoration-color .25s ease;
+}
+.mot__secours a:hover { color: var(--mot-encre); text-decoration-color: currentColor; }
+
+/* Envoyé : le formulaire laisse la place à un mot de remerciement, et à son sceau
+   (sur l'accueil et Medsan, le cachet 済, « réglé », que l'on pose au Japon sur un courrier traité ;
+   chez Popsan, la lueur d'une lanterne). */
+.mot__merci {
+  width: 100%;
+  text-align: left;
+  outline: none;
+  color: var(--mot-encre);
+}
+.mot__merci[hidden] { display: none; }
+.mot__merci::before {
+  content: var(--mot-sceau-texte, "") / "";
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: 1.4rem;
+  border-radius: var(--mot-sceau-rayon, 50%);
+  background: var(--mot-sceau, currentColor);
+  color: var(--mot-sceau-encre, transparent);
+  font: 500 1.375rem/1 "Shippori Mincho", "Noto Serif JP", "Hiragino Mincho ProN", serif;
+  rotate: var(--mot-sceau-angle, 0deg);
+}
+.mot__merci-titre {
+  margin: 0;
+  font: 500 clamp(1.625rem, 1.2rem + 1.4vw, 2.25rem)/1.2 var(--mot-fonte-titre, var(--mot-fonte));
+  letter-spacing: -.005em;
+}
+.mot__merci-texte {
+  margin: .8rem 0 0;
+  max-width: 34em;
+  font: 400 var(--mot-taille)/1.6 var(--mot-fonte);
+  color: var(--mot-label);
+  overflow-wrap: anywhere;
+}
+.mot__encore {
+  margin-top: 1.5rem;
+  padding: .55rem 0;
+  border: 0;
+  background: none;
+  font: 400 .875rem/1.4 var(--mot-fonte-ui);
+  color: var(--mot-encre);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .28em;
+  text-decoration-color: var(--mot-ligne);
+  cursor: pointer;
+}
+.mot__encore:hover { text-decoration-color: currentColor; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .mot__merci:not([hidden]) { animation: mot-paraitre .9s var(--mot-doux) both; }
+  .mot__merci:not([hidden])::before { animation: mot-sceau 1.1s var(--mot-doux) .15s both; }
+}
+@keyframes mot-paraitre { from { opacity: 0; transform: translateY(.6rem); } }
+@keyframes mot-sceau { from { opacity: 0; transform: scale(1.35); } }   /* le cachet se pose */
+
+@media (prefers-reduced-motion: reduce) {
+  .mot__saisie, .mot__label { transition: none; }
+  .mot__envoyer[aria-disabled="true"] [data-libelle]::after { animation: none; }
+}
