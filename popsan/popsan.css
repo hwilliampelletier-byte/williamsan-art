@@ -374,6 +374,18 @@ sup { position: relative; top: -.42em; font-size: .68em; line-height: 0; vertica
   hanging-punctuation: first;
 }
 .salle .toile { width: min(100%, calc(100svh - 22rem)); min-width: min(100%, 17rem); justify-self: center; }
+
+/* Téléphone (08/10/2026) : la hauteur VISIBLE d'un iPhone, barres de Safari comprises, tombe à
+   550-740 px. La scène, centrée, débordait alors en haut comme en bas, et le manifeste remontait
+   sous le menu. Elle part donc du haut, sous l'en-tête, et la toile prend la hauteur qui reste :
+   le titre, la toile et le cartel tiennent dans l'écran, sans jamais toucher la navigation. */
+@media not ((min-width: 56rem) and (min-aspect-ratio: 1/1)) {
+  .salle__scene { align-content: start; gap: 1.25rem; }
+  .salle .toile { width: min(100%, max(11rem, calc(100svh - 29rem))); min-width: 0; }
+}
+@media (max-height: 36rem) and (max-width: 40rem) {
+  .manifeste { font-size: 2rem; }
+}
 .salle__cartel { position: relative; z-index: 3; justify-self: start; }
 .salle__cartel .lien { display: inline-block; margin-top: .7rem; }
 .salle .nuit { z-index: 2; }
