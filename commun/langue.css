@@ -46,3 +46,16 @@
     margin: -.7rem -.5rem;            /* …sans rien pousser */
   }
 }
+
+/* « L'atelier » ouvre atelierjoconde.com dans un nouvel onglet : une petite flèche le dit. */
+.nav__ext {
+  display: inline-block;
+  margin-left: .2em;
+  font-family: "Zen Kaku Gothic New", system-ui, sans-serif;
+  font-size: .7em;
+  line-height: 1;
+  vertical-align: .32em;
+  opacity: .75;
+  transition: transform .25s ease;
+}
+.nav a:hover .nav__ext { transform: translate(1px, -1px); }

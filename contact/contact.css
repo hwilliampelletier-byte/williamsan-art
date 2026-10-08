@@ -1,0 +1,130 @@
+/* williamsan.art — la page Contact.
+   Simple et efficace : une phrase en grand, la photo de William San sur son stand, le formulaire.
+   Les couleurs, l'en-tête et le pied viennent de l'accueil (accueil/accueil.css) ; ici, la mise en page.
+   Ordinateur : la photo à gauche, sur toute la hauteur ; la phrase puis le formulaire à droite.
+   Téléphone : la phrase, la photo, le formulaire, l'un sous l'autre. */
+
+.joindre {
+  position: relative;
+  z-index: 1;
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: calc(clamp(7.5rem, 17svh, 10.5rem) + env(safe-area-inset-top)) var(--gouttiere) clamp(5rem, 13svh, 8.5rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "tete" "photo" "mot";
+  gap: clamp(2.5rem, 7svh, 3.5rem);
+}
+
+.joindre__tete { grid-area: tete; }
+.joindre__photo { grid-area: photo; }
+.joindre__mot { grid-area: mot; }
+
+/* La phrase : grande, serrée, sans rien autour. */
+.joindre__titre {
+  margin: 0;
+  font: 500 clamp(3rem, 5.4vw, 5.25rem)/1 var(--serif);
+  letter-spacing: -.025em;
+  white-space: nowrap;              /* « Écrivez-moi. » ne se coupe jamais au trait d'union */
+}
+.joindre__chapo {
+  max-width: 31rem;
+  margin: clamp(1.25rem, 3svh, 1.75rem) 0 0;
+  font: 400 clamp(1.1875rem, 1.55vw, 1.375rem)/1.6 var(--serif);
+  color: var(--usuzumi);
+  text-wrap: pretty;
+}
+
+/* La photo, telle quelle : pas de filtre, un cadre droit. */
+.joindre__photo { margin: 0; }
+.joindre__photo img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 30%;
+  background: #262421;
+}
+.joindre__legende {
+  margin-top: .85rem;
+  max-width: 34rem;
+  font: 400 .875rem/1.55 var(--sans);
+  color: var(--usuzumi);
+}
+
+/* Le formulaire : l'encre sur le papier, comme sur l'accueil. */
+.joindre .mot,
+.joindre .mot__merci {
+  --mot-encre: var(--encre);
+  --mot-ligne: rgb(27 25 22 / .32);
+  --mot-trait: var(--encre);
+  --mot-label: var(--usuzumi);
+  --mot-faux: #9b2f1d;
+  --mot-sceau: #a8361f;
+  --mot-sceau-encre: var(--ivoire);
+  --mot-sceau-texte: "済";
+  --mot-sceau-rayon: 3px;
+  --mot-sceau-angle: -4deg;
+  --mot-fonte: var(--serif);
+  --mot-fonte-ui: var(--sans);
+  --mot-fonte-titre: var(--serif);
+  --mot-taille: 1.125rem;
+}
+
+/* Envoyer : le seul aplat d'encre de la page. */
+.joindre__envoyer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.375rem;
+  min-width: 11rem;
+  padding: .95rem 2.5rem;
+  border: 1px solid var(--encre);
+  border-radius: 0;
+  background: var(--encre);
+  color: var(--ivoire);
+  font: 500 1.0625rem/1.2 var(--serif);
+  letter-spacing: .03em;
+  transition: background-color .5s var(--lent), color .5s var(--lent);
+}
+.joindre__envoyer:hover,
+.joindre__envoyer:focus-visible { background: transparent; color: var(--encre); }
+.joindre__envoyer:focus-visible { outline-offset: 5px; }
+@media (max-width: 30rem) {
+  .joindre__envoyer { flex: 1 1 100%; }
+}
+
+.joindre__lieu {
+  margin: clamp(2.5rem, 6svh, 3.5rem) 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--filet);
+  font: 400 1rem/1.6 var(--serif);
+  color: var(--usuzumi);
+}
+
+/* Ordinateur : deux colonnes. La photo tient dans l'écran et reste en place pendant qu'on écrit. */
+@media (min-width: 56rem) {
+  .joindre {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas: "photo tete" "photo mot";
+    column-gap: clamp(3.5rem, 7vw, 7.5rem);
+    row-gap: clamp(2.5rem, 6svh, 3.75rem);
+    align-items: start;
+  }
+  .joindre__tete { padding-top: clamp(0rem, 4svh, 2.5rem); }
+  .joindre__photo {
+    position: sticky;
+    top: 2rem;
+  }
+  .joindre__photo img { aspect-ratio: auto; }   /* la photo entière : Tsuki à gauche, William à droite */
+}
+
+/* Un seul mouvement, à l'arrivée : la photo se dévoile de bas en haut, la phrase se pose. */
+@media (prefers-reduced-motion: no-preference) {
+  .joindre__photo img { animation: joindre-devoiler 1.4s var(--lent) both; }
+  .joindre__titre { animation: joindre-poser 1s .15s var(--lent) both; }
+  .joindre__chapo { animation: joindre-poser 1s .3s var(--lent) both; }
+}
+@keyframes joindre-devoiler { from { clip-path: inset(100% 0 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes joindre-poser { from { opacity: 0; transform: translateY(.6rem); } to { opacity: 1; transform: none; } }
