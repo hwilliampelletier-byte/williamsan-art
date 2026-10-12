@@ -179,6 +179,8 @@ main, .pied { position: relative; z-index: 1; }
   .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
   .entete .nav { justify-content: space-between; gap: 0; }
   .entete .nav a { font-size: .9375rem; }
+  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà. */
+  .entete .nav:has(a[href$="journal/index.html"]) > a:first-of-type { display: none; }
 }
 
 /* ───────────────────────── Le seuil ───────────────────────── */

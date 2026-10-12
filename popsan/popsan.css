@@ -139,6 +139,8 @@ sup { position: relative; top: -.42em; font-size: .68em; line-height: 0; vertica
   .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
   .entete .nav { justify-content: space-between; gap: 0; }
   .entete .nav a { font-size: .9375rem; }
+  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà. */
+  .entete .nav:has(a[href$="journal/index.html"]) > a:first-of-type { display: none; }
 }
 
 /* ═══════════════════════════ Les toiles : mur, ombre portée, calque de nuit ═══════════════════════════ */
