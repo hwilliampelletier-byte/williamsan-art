@@ -49,6 +49,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/"/>
   </url>
   <url>
+    <loc>https://williamsan.art/journal/kintsugi-signification-fissures-tracees/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/kintsugi-signification-fissures-tracees/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/kintsugi-signification-fissures-tracees/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/kintsugi-signification-fissures-tracees/"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/journal/kintsugi-signification-fissures-tracees/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/kintsugi-signification-fissures-tracees/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/kintsugi-signification-fissures-tracees/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/kintsugi-signification-fissures-tracees/"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/medsan/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/medsan/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/medsan/"/>
