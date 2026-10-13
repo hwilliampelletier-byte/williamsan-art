@@ -988,3 +988,25 @@ main, .contact, .pied { position: relative; z-index: 1; }
   .contact__video { display: none; }
   .fiche__cadre, .fiche__fente { transition: none; }
 }
+
+/* ───────────── Choisir une œuvre : les guides par organe (13/10/2026) ───────────── */
+.guides-medsan { padding: clamp(4.5rem, 11vh, 6.5rem) 0; }
+.guides-medsan__liste {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .9rem 2rem;
+  max-width: 46rem;
+  margin: 2rem auto 0;
+  padding: 0;
+  list-style: none;
+  font: 400 1.125rem/1.5 var(--serif);
+}
+.guides-medsan__liste a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .3em;
+  text-decoration-color: rgb(0 0 0 / .28);
+}
+.guides-medsan__liste a:hover { text-decoration-color: currentColor; }

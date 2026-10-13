@@ -1,0 +1,123 @@
+/* williamsan.art — les guides Medsan (une page par organe, et « offrir à un médecin »).
+   Même page de lecture que le Journal (journal/journal.css) : le titre, une courte introduction en colonne,
+   puis les œuvres l'une sous l'autre, l'image à gauche et ce qu'il faut savoir à droite : ce qu'elle montre,
+   son sujet médical, ses formats et ses prix, le lien vers sa fiche. Rien ne bouge. */
+
+.guide-oeuvres {
+  max-width: 64rem;
+  margin: clamp(3rem, 8svh, 4.5rem) auto 0;
+}
+
+.guide-oeuvre {
+  display: grid;
+  grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3.25rem);
+  align-items: start;
+  padding: clamp(2rem, 5svh, 3rem) 0;
+  border-top: 1px solid var(--filet);
+  scroll-margin-top: 6rem;
+}
+
+.guide-oeuvre__image { display: block; }
+.guide-oeuvre__image img {
+  width: 100%;
+  height: auto;
+  background: var(--nuit);
+  outline: 1px solid rgb(167 128 60 / .55);
+  outline-offset: 5px;
+}
+
+.guide-oeuvre__titre {
+  margin: 0;
+  font: 500 clamp(1.625rem, 2.6vw, 2.125rem)/1.15 var(--serif);
+  letter-spacing: -.01em;
+}
+
+.guide-oeuvre__theme {
+  margin: .55rem 0 0;
+  font: 500 .8125rem/1.4 var(--sans);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+
+.guide-oeuvre__texte > p:not(.guide-oeuvre__theme) {
+  margin: 1.1rem 0 0;
+  font: 400 1.125rem/1.75 var(--serif);
+  text-wrap: pretty;
+}
+
+.guide-offres,
+.guide-offres ul {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  font: 400 .9375rem/1.55 var(--sans);
+  color: var(--usuzumi);
+}
+.guide-offres ul { margin: .25rem 0 0 1rem; }
+.guide-offres > li + li { margin-top: .5rem; }
+.guide-prix { color: var(--encre); font-weight: 500; white-space: nowrap; }
+.guide-cadre { font-size: .875rem; }
+
+.guide-oeuvre__lien { font: 500 .9375rem/1.4 var(--sans); }
+
+/* ───────────── Offrir : par spécialité ───────────── */
+
+.guide-specialites {
+  max-width: 46rem;
+  margin: clamp(3rem, 8svh, 4.5rem) auto 0;
+}
+.guide-specialites > h2,
+.guide-faq > h2 {
+  margin: 0 0 .5rem;
+  font: 500 .8125rem/1 var(--sans);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--usuzumi);
+}
+.guide-specialite {
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--filet);
+  scroll-margin-top: 6rem;
+}
+.guide-specialite h3 {
+  margin: 0;
+  font: 500 1.5rem/1.25 var(--serif);
+}
+.guide-specialite p {
+  margin: .7rem 0 0;
+  font: 400 1.125rem/1.75 var(--serif);
+  text-wrap: pretty;
+}
+.guide-cartes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 1.25rem 1rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ───────────── Questions et navigation entre guides ───────────── */
+
+.guide-faq {
+  margin-top: clamp(3.5rem, 9svh, 5rem);
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--filet);
+}
+.guide-faq h3 { margin-top: 1.6em; }
+.guide-faq h3 + p { margin-top: .5em; }
+
+.guide-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem 1.5rem;
+}
+.guide-nav li + li { margin-top: 0; }
+.guide-nav a[aria-current="page"] { color: var(--ocre); text-decoration: none; }
+
+@media (max-width: 44rem) {
+  .guide-oeuvre { grid-template-columns: 1fr; }
+  .guide-oeuvre__image { max-width: 26rem; }
+}
