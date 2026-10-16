@@ -85,6 +85,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/chous-spine-la-vie-en-rose-paris/"/>
   </url>
   <url>
+    <loc>https://williamsan.art/journal/eloge-de-l-ombre-tanizaki-popsan/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/journal/eloge-de-l-ombre-tanizaki-popsan/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/eloge-de-l-ombre-tanizaki-popsan/"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/journal/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/"/>
