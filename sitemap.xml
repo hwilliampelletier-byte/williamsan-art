@@ -181,6 +181,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/konbini-le-passage-de-la-nuit/"/>
   </url>
   <url>
+    <loc>https://williamsan.art/journal/maneki-neko-signification/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/maneki-neko-signification/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/maneki-neko-signification/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/maneki-neko-signification/"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/journal/maneki-neko-signification/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/maneki-neko-signification/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/maneki-neko-signification/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/maneki-neko-signification/"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/journal/medsan-art-de-la-medecine/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/medsan-art-de-la-medecine/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/medsan-art-de-la-medecine/"/>
