@@ -1,0 +1,49 @@
+# Parutions programmées du Journal de williamsan.art, quand le Mac de William est éteint.
+# Le site du jour J est construit d'avance sur le Mac et poussé sur la branche « parution-AAAA-MM-JJ »
+# (au-dessus de main) ; ce job, chaque matin, avance main jusqu'à cette branche, relance GitHub Pages
+# et signale les pages nouvelles à IndexNow. Sans branche du jour, il ne fait rien.
+name: Parution programmée du Journal
+
+on:
+  schedule:
+    - cron: "5 7 * * *"    # 9 h 05 à Paris (heure d'été), 8 h 05 en hiver
+    - cron: "5 12 * * *"   # rattrapage si GitHub a sauté le premier passage
+  workflow_dispatch:
+    inputs:
+      branche:
+        description: "Branche à mettre en ligne (par défaut parution-AAAA-MM-JJ du jour, heure de Paris)"
+        required: false
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  parution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Mettre en ligne la parution du jour
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCHE_DEMANDEE: ${{ inputs.branche }}
+        run: |
+          set -e
+          B="${BRANCHE_DEMANDEE:-parution-$(TZ=Europe/Paris date +%F)}"
+          if ! git ls-remote --exit-code --heads origin "$B" >/dev/null; then
+            echo "Pas de parution programmée ($B)."; exit 0
+          fi
+          git fetch -q origin "$B"
+          if git merge-base --is-ancestor "origin/$B" HEAD; then echo "$B est déjà en ligne."; exit 0; fi
+          AVANT=$(git rev-parse HEAD)
+          git merge --ff-only "origin/$B"
+          git push origin HEAD:main
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" --silent || echo "Demande de construction Pages refusée : le push la déclenche."
+          URLS=$(git diff --name-only "$AVANT" HEAD -- '*.html' | sed -E 's#(^|/)index\.html$#\1#; s#^#https://williamsan.art/#' | jq -R . | jq -s -c .)
+          echo "Pages nouvelles ou modifiées : $URLS"
+          sleep 150
+          curl -s -o /dev/null -w "IndexNow : %{http_code}\n" -H "Content-Type: application/json; charset=utf-8" \
+            -d "{\"host\":\"williamsan.art\",\"key\":\"eea8821fc4fbed695119188a3ec3f013\",\"keyLocation\":\"https://williamsan.art/eea8821fc4fbed695119188a3ec3f013.txt\",\"urlList\":$URLS}" \
+            https://api.indexnow.org/indexnow
