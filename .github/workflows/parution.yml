@@ -6,8 +6,10 @@ name: Parution programmée du Journal
 
 on:
   schedule:
-    - cron: "5 7 * * *"    # 9 h 05 à Paris (heure d'été), 8 h 05 en hiver
-    - cron: "5 12 * * *"   # rattrapage si GitHub a sauté le premier passage
+    # GitHub retarde ou saute souvent les tâches planifiées (du 17 au 19/10, la parution partait entre 13 h 30
+    # et 17 h 30 au lieu de 9 h 05) : 18 tentatives chaque matin, toutes les 20 minutes ; la première publie,
+    # les suivantes voient la branche déjà en ligne et s'arrêtent. Heures UTC : 6 h 07 à 11 h 47 à Paris l'été.
+    - cron: "7,27,47 4-9 * * *"
   workflow_dispatch:
     inputs:
       branche:
