@@ -240,3 +240,9 @@
 @media (max-width: 40rem) {
   .billet__corps { font-size: 1.125rem; }
 }
+
+/* Sur un téléphone au texte agrandi (moins de 21 rem de large), le menu passe sur deux rangées :
+   l'en-tête descend d'environ 1,5 rem, le titre aussi (21/10/2026). */
+@media (max-width: 21rem) {
+  .journal { padding-top: calc(clamp(9.25rem, 17svh, 10.5rem) + env(safe-area-inset-top)); }
+}

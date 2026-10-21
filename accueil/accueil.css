@@ -14,7 +14,7 @@
 }
 
 :root {
-  color-scheme: light;
+  color-scheme: only light;  /* « only » : Chrome et Samsung Internet sur Android ne forcent plus leur mode sombre sur la porcelaine */
 
   /* La maison : papier et encre */
   --ivoire: #e9e5dc;
@@ -179,8 +179,16 @@ main, .pied { position: relative; z-index: 1; }
   .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
   .entete .nav { justify-content: space-between; gap: 0; }
   .entete .nav a { font-size: .9375rem; }
-  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà. */
-  .entete .nav:has(a[href$="journal/index.html"]) > a:first-of-type { display: none; }
+  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà.
+     « journal/ » et non « journal/index.html » : la copie publiée raccourcit les adresses (liens_propres.py),
+     et l'ancien sélecteur ne trouvait plus rien en ligne. « Contact » passait alors seul à la ligne sur
+     tous les téléphones de 360 px, la largeur la plus courante sur Android (21/10/2026). */
+  .entete .nav:has(a[href*="journal/"]) > a:first-of-type { display: none; }
+}
+/* Plus étroit encore (texte agrandi dans les réglages d'Android, qui zoome toute la page) : les cinq
+   liens ne tiennent plus sur une ligne. Deux rangées alignées plutôt qu'un mot seul dessous. */
+@media (max-width: 21rem) {
+  .entete .nav { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; }
 }
 
 /* ───────────────────────── Le seuil ───────────────────────── */
@@ -931,7 +939,7 @@ main, .pied { position: relative; z-index: 1; }
 }
 
 .nav--pied { flex-direction: column; gap: 0; }
-.nav--pied a { color: #c9c2b4; padding: .3rem 0; }
+.nav--pied a { color: #c9c2b4; padding: .55rem 0; }  /* 21/10/2026 : .3rem laissait des cibles collées */
 .nav--pied a:hover, .nav--pied a[aria-current="page"] { color: var(--ivoire); }
 .nav--pied a[aria-current="page"] { text-decoration: none; }
 

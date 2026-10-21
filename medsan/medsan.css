@@ -28,7 +28,7 @@
   --grain-toile: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='3'/%3E%3CfeColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.12 0 0 0 0 0.1 0 0 0 0.6 0'/%3E%3C/filter%3E%3Cpattern id='w' width='4' height='4' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0 2h4M2 0v4' stroke='%23000' stroke-opacity='0.08' stroke-width='0.5'/%3E%3C/pattern%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3Crect width='100%25' height='100%25' fill='url(%23w)'/%3E%3C/svg%3E");
   --grain-platre: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0.28 0 0 0 0 0.24 0 0 0 0 0.18 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 
-  color-scheme: light;
+  color-scheme: only light;  /* « only » : Chrome et Samsung Internet sur Android ne forcent plus leur mode sombre sur la porcelaine */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -145,8 +145,16 @@ main, .contact, .pied { position: relative; z-index: 1; }
   .entete { flex-direction: column; align-items: stretch; gap: .35rem; }
   .entete .nav { justify-content: space-between; gap: 0; }
   .entete .nav a { font-size: .9375rem; }
-  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà. */
-  .entete .nav:has(a[href$="journal/index.html"]) > a:first-of-type { display: none; }
+  /* Avec le Journal, six liens ne tiennent plus sur un téléphone : « Accueil » s'efface, le nom y mène déjà.
+     « journal/ » et non « journal/index.html » : la copie publiée raccourcit les adresses (liens_propres.py),
+     et l'ancien sélecteur ne trouvait plus rien en ligne. « Contact » passait alors seul à la ligne sur
+     tous les téléphones de 360 px, la largeur la plus courante sur Android (21/10/2026). */
+  .entete .nav:has(a[href*="journal/"]) > a:first-of-type { display: none; }
+}
+/* Plus étroit encore (texte agrandi dans les réglages d'Android, qui zoome toute la page) : les cinq
+   liens ne tiennent plus sur une ligne. Deux rangées alignées plutôt qu'un mot seul dessous. */
+@media (max-width: 21rem) {
+  .entete .nav { display: grid; grid-template-columns: repeat(3, auto); justify-content: space-between; }
 }
 
 /* ——— Le grand titre : MEDSAN découpé dans l'œuvre ——— */
@@ -317,7 +325,7 @@ main, .contact, .pied { position: relative; z-index: 1; }
 
 .rubrique { max-width: 42rem; margin: 0 auto; text-align: center; }
 .rubrique .surtitre { margin-bottom: 1.5rem; }
-.rubrique h2 { font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem); line-height: 1.25; margin-bottom: 1.25rem; }
+.rubrique h2 { font-size: clamp(1.875rem, 1.2rem + 2.4vw, 3rem); line-height: 1.25; margin-bottom: 1.25rem; text-wrap: balance; }
 .rubrique__sous { color: var(--gris); text-wrap: balance; }
 
 /* ——— La démarche, juste sous le titre ——— */
@@ -419,16 +427,16 @@ main, .contact, .pied { position: relative; z-index: 1; }
 }
 .carte__mention {
   margin-top: .5rem;
-  font-size: .5625rem;
-  letter-spacing: .18em;
+  font-size: .6875rem;   /* 9 px auparavant : illisible sur un téléphone (21/10/2026) */
+  letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--vermillon);
 }
 .carte__meta {
   margin-top: .375rem;
-  font-size: .5625rem;
+  font-size: .625rem;
   line-height: 1.6;
-  letter-spacing: .12em;
+  letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--gris);
 }
@@ -961,7 +969,7 @@ main, .contact, .pied { position: relative; z-index: 1; }
 }
 .pied__maison p { margin-top: .35rem; color: var(--gris); }
 .nav--pied { flex-direction: column; gap: 0; }
-.nav--pied a { padding: .3rem 0; }
+.nav--pied a { padding: .55rem 0; }  /* 21/10/2026 : .3rem laissait des cibles collées */
 .nav--pied a[aria-current="page"] { text-decoration: none; }
 .pied__contact { margin: 0; padding: 0; list-style: none; line-height: 1.5; }
 .pied__contact li + li { margin-top: .7rem; }
@@ -1010,3 +1018,12 @@ main, .contact, .pied { position: relative; z-index: 1; }
   text-decoration-color: rgb(0 0 0 / .28);
 }
 .guides-medsan__liste a:hover { text-decoration-color: currentColor; }
+
+/* Texte agrandi dans les réglages d'Android (la page se comporte comme un écran de 260 à 330 px), 21/10/2026 :
+   le menu passe sur deux rangées et la photo de gauche ne doit plus s'y poser ; deux cartes de 100 px ne
+   laissaient plus lire titre, formats ni prix, une par rang. */
+@media (max-width: 21rem) {
+  .atelier { width: 4.75rem; }
+  .atelier--gauche { top: 22.5%; }
+  .grille { grid-template-columns: minmax(0, 1fr); gap: 2.75rem; }
+}
