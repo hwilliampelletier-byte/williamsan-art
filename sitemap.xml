@@ -109,6 +109,18 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/chous-spine-la-vie-en-rose-paris/"/>
   </url>
   <url>
+    <loc>https://williamsan.art/journal/cinq-colonnes-medsan/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/cinq-colonnes-medsan/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/cinq-colonnes-medsan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/cinq-colonnes-medsan/"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/journal/cinq-colonnes-medsan/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/cinq-colonnes-medsan/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/cinq-colonnes-medsan/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/journal/cinq-colonnes-medsan/"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/journal/clair-obscur-peinture-caravage-popsan/</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/journal/clair-obscur-peinture-caravage-popsan/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/journal/clair-obscur-peinture-caravage-popsan/"/>
