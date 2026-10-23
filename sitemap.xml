@@ -337,6 +337,42 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/botan.html"/>
   </url>
   <url>
+    <loc>https://williamsan.art/popsan/dioskouroi.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/dioskouroi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/dioskouroi.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/dioskouroi.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/dioskouroi.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/dioskouroi.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/dioskouroi.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/dioskouroi.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/popsan/eos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/eos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/eos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/eos.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/eos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/eos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/eos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/eos.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/popsan/eurydike.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/eurydike.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/eurydike.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/eurydike.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/eurydike.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/eurydike.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/eurydike.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/eurydike.html"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/popsan/hanabi.html</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/hanabi.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/hanabi.html"/>
@@ -421,6 +457,30 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/ogi.html"/>
   </url>
   <url>
+    <loc>https://williamsan.art/popsan/psyche.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/psyche.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/psyche.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/psyche.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/psyche.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/psyche.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/psyche.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/psyche.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/popsan/selene.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/selene.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/selene.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/selene.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/selene.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/selene.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/selene.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/selene.html"/>
+  </url>
+  <url>
     <loc>https://williamsan.art/popsan/seppun.html</loc>
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/seppun.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/seppun.html"/>
@@ -455,6 +515,18 @@
     <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/shuden.html"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/shuden.html"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/shuden.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/popsan/thanatos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/thanatos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/thanatos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/thanatos.html"/>
+  </url>
+  <url>
+    <loc>https://williamsan.art/en/popsan/thanatos.html</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://williamsan.art/popsan/thanatos.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://williamsan.art/en/popsan/thanatos.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://williamsan.art/popsan/thanatos.html"/>
   </url>
   <url>
     <loc>https://williamsan.art/popsan/tsuki.html</loc>

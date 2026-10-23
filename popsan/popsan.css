@@ -533,6 +533,39 @@ sup { position: relative; top: -.42em; font-size: .68em; line-height: 0; vertica
   .paire { gap: 3rem clamp(1.5rem, 3.2vw, 3.25rem); }
 }
 
+/* Les Mythes (23/10/2026) : six toiles, trop pour la colonne de droite. Le texte reste en deux temps
+   comme dans les autres salles, l'accrochage passe dessous, sur toute la largeur. */
+.mythes { gap: clamp(2.75rem, 7svh, 4.5rem); }
+/* Eurydikē n'a pas de traduction sous son titre : le statut et l'appel descendent au pied du cartel,
+   pour rester alignés sur ceux de ses voisines. */
+.mythes .oeuvre > .cartel { display: flex; flex-direction: column; align-items: flex-start; }
+.mythes .cartel__statut { margin-top: auto !important; padding-top: .3rem; }
+@media (min-width: 64rem) {
+  .salle-2.mythes { grid-template-columns: minmax(0, 1fr); }
+  .mythes__tete { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: clamp(2.5rem, 5vw, 5.5rem); align-items: start; }
+  .mythes__tete .texte { margin-top: .9rem; }
+}
+
+/* Le sommaire des salles, sous l'introduction */
+.series { margin-top: 1.4rem; padding-top: .6rem; border-top: 1px solid var(--filet); max-width: 34em; }
+.series ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0 1.9rem; }
+.series a {
+  display: inline-block;
+  padding-block: .6rem;
+  font: 400 var(--t-lead)/1.3 var(--serif);
+  color: var(--ivoire-doux);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .32em;
+  text-decoration-color: rgb(238 230 213 / .22);
+  transition: color .25s ease, text-decoration-color .25s ease;
+}
+.series a:hover { color: var(--ivoire); text-decoration-color: var(--ivoire); }
+/* Sur téléphone, quatre noms ne tiennent pas sur une ligne : deux par deux plutôt que « Mythes » seul dessous. */
+@media (max-width: 30rem) {
+  .series ul { display: grid; grid-template-columns: repeat(2, max-content); column-gap: 2.75rem; }
+}
+
 /* ═══════════════════════════ Écrire à William San : la flamme dans la lanterne ═══════════════════════════
    Une vidéo muette en boucle lente, sous un voile ; sans mouvement (ou avant qu'elle joue), son image fixe.
    Devant, d'un seul tenant : la phrase, le formulaire, et William San interviewé sur son stand à Monaco,
