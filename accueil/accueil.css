@@ -492,31 +492,34 @@ main, .pied { position: relative; z-index: 1; }
    l'or s'y trace et la lanterne s'allume ; le cobalt se trace autour de la
    porcelaine.                                                              */
 @media (prefers-reduced-motion: no-preference) {
-  .seuil__nom { animation: poser 1.6s var(--lent) .1s both; }
-  .seuil__phrase span:nth-child(1) { animation: poser 1.4s var(--lent) .6s both; }
-  .seuil__phrase span:nth-child(2) { animation: poser 1.4s var(--lent) .9s both; }
+  /* 12/11/2026 — William : « la page d'accueil met trop de temps à se charger pour le CTA vers Popsan et
+     Medsan […] on a l'impression que c'est bugué ». La séquence durait près de 5 s avant que les deux
+     fenêtres et leur « Entrer » soient lisibles. Tout est désormais posé en 1,5 s, liens visibles dès 1,2 s. */
+  .seuil__nom { animation: poser .9s var(--lent) 0s both; }
+  .seuil__phrase span:nth-child(1) { animation: poser .8s var(--lent) .15s both; }
+  .seuil__phrase span:nth-child(2) { animation: poser .8s var(--lent) .3s both; }
 
-  .fenetres::before { animation: tracer 1.8s cubic-bezier(.5, 0, .2, 1) 1.5s both; }
+  .fenetres::before { animation: tracer 1s cubic-bezier(.5, 0, .2, 1) .4s both; }
 
-  .fenetre__jour { animation: paraitre 1.2s ease-out 1.25s both; }
-  .fenetre--medsan .fenetre__jour { animation-delay: 1.5s; }
+  .fenetre__jour { animation: paraitre .6s ease-out .1s both; }
+  .fenetre--medsan .fenetre__jour { animation-delay: .2s; }
 
-  .fenetre--popsan .fenetre__voile { animation: dissiper 3s cubic-bezier(.45, 0, .3, 1) 1.9s backwards; }
-  .fenetre--medsan .fenetre__voile { animation: dissiper 2.4s cubic-bezier(.45, 0, .3, 1) 2.1s backwards; }
+  .fenetre--popsan .fenetre__voile { animation: dissiper 1.1s cubic-bezier(.45, 0, .3, 1) .25s backwards; }
+  .fenetre--medsan .fenetre__voile { animation: dissiper 1s cubic-bezier(.45, 0, .3, 1) .35s backwards; }
 
-  .fenetre__lueur { animation: allumer 4.2s ease-in-out 2.3s backwards; }
+  .fenetre__lueur { animation: allumer 2.6s ease-in-out .6s backwards; }
 
-  .fenetre--popsan .fenetre__cadre { animation: tourner 2.4s cubic-bezier(.55, 0, .25, 1) 1.6s backwards; }
+  .fenetre--popsan .fenetre__cadre { animation: tourner 1.2s cubic-bezier(.55, 0, .25, 1) .2s backwards; }
 
-  .fenetre--medsan .fenetre__cadre span { animation: filer-x .8s cubic-bezier(.6, 0, .3, 1) backwards; }
+  .fenetre--medsan .fenetre__cadre span { animation: filer-x .4s cubic-bezier(.6, 0, .3, 1) backwards; }
   .fenetre--medsan .fenetre__cadre span:nth-child(2n) { animation-name: filer-y; }
-  .fenetre--medsan .fenetre__cadre span:nth-child(1) { animation-delay: 1.8s; }
-  .fenetre--medsan .fenetre__cadre span:nth-child(2) { animation-delay: 2.45s; }
-  .fenetre--medsan .fenetre__cadre span:nth-child(3) { animation-delay: 3.1s; }
-  .fenetre--medsan .fenetre__cadre span:nth-child(4) { animation-delay: 3.75s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(1) { animation-delay: .3s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(2) { animation-delay: .6s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(3) { animation-delay: .9s; }
+  .fenetre--medsan .fenetre__cadre span:nth-child(4) { animation-delay: 1.2s; }
 
-  .fenetre__legende { animation: poser 1.4s var(--lent) 2.6s both; }
-  .fenetre--medsan .fenetre__legende { animation-delay: 2.85s; }
+  .fenetre__legende { animation: poser .8s var(--lent) .35s both; }
+  .fenetre--medsan .fenetre__legende { animation-delay: .45s; }
 }
 
 @keyframes poser {

@@ -1,0 +1,150 @@
+/* williamsan.art — le règlement du concours 10K de @medsan.art (page temporaire, noindex).
+   Un texte à lire, rien d'autre : le titre, une phrase, les trois œuvres du lot en vignettes
+   numérotées, puis les dix articles. Les couleurs, l'en-tête et le pied viennent de l'accueil
+   (accueil/accueil.css) : l'ivoire, l'encre, et l'or seulement en filet et dans les numéros.
+   Ordinateur : le numéro et le titre de chaque article à gauche, le texte à droite.
+   Téléphone : l'un sous l'autre. */
+
+.concours {
+  position: relative;
+  z-index: 1;
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: calc(clamp(7.5rem, 17svh, 10.5rem) + env(safe-area-inset-top)) var(--gouttiere) clamp(4.5rem, 12svh, 7.5rem);
+}
+
+/* ───── Le titre et la phrase ───── */
+
+.concours__titre {
+  margin: 0;
+  max-width: 18ch;
+  font: 500 clamp(2.25rem, 5.2vw, 4.25rem)/1.08 var(--serif);
+  letter-spacing: -.02em;
+  text-wrap: balance;
+}
+.concours__chapo {
+  max-width: 34rem;
+  margin: clamp(1rem, 2.6svh, 1.5rem) 0 0;
+  font: 400 clamp(1.125rem, 1.5vw, 1.3125rem)/1.6 var(--serif);
+  color: var(--usuzumi);
+  text-wrap: pretty;
+}
+
+/* ───── Les trois œuvres du lot ───── */
+
+.lot {
+  list-style: none;
+  margin: clamp(2.5rem, 7svh, 4rem) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(.75rem, 2.4vw, 1.75rem);
+  max-width: 48rem;
+}
+.lot figure { margin: 0; }
+.lot img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: #d9d3c6;
+  outline: 1px solid rgb(27 25 22 / .12);
+  outline-offset: -1px;
+}
+.lot figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: .55rem;
+  margin-top: .7rem;
+  font: 400 1rem/1.3 var(--serif);
+}
+.lot__num {
+  flex: none;
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 1px solid var(--kin);
+  border-radius: 50%;
+  font: 500 .9375rem/1 var(--serif);
+  color: var(--ocre);
+  transform: translateY(-.05rem);
+}
+.lot__titre { min-width: 0; }
+
+@media (max-width: 30rem) {
+  /* Trois vignettes de front, même à 360 px : le numéro passe au-dessus du titre. */
+  .lot figcaption { flex-direction: column; align-items: flex-start; gap: .35rem; font-size: .875rem; }
+  .lot__num { width: 1.5rem; height: 1.5rem; font-size: .8125rem; }
+}
+
+/* ───── Les dix articles ───── */
+
+.reglement {
+  margin-top: clamp(3rem, 9svh, 5.5rem);
+  border-bottom: 1px solid var(--filet);
+}
+
+.regle {
+  padding: clamp(1.75rem, 4.5svh, 2.5rem) 0;
+  border-top: 1px solid var(--filet);
+  scroll-margin-top: 1.5rem;
+}
+
+.regle__tete {
+  margin: 0 0 .9rem;
+  font: inherit;
+}
+.regle__num {
+  display: block;
+  font: 500 .75rem/1.4 var(--sans);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ocre);
+}
+.regle__titre {
+  display: block;
+  margin-top: .3rem;
+  font: 500 clamp(1.3125rem, 2vw, 1.5rem)/1.3 var(--serif);
+  letter-spacing: -.005em;
+}
+
+.regle__corps {
+  max-width: 40rem;
+  font: 400 1.0625rem/1.75 var(--serif);
+  overflow-wrap: anywhere;          /* l'adresse e-mail de l'article 1 ne déborde jamais à 360 px */
+}
+.regle__corps > * { margin: 0; }
+.regle__corps > * + * { margin-top: .85rem; }
+
+.regle__liste { padding: 0 0 0 1.75rem; }
+.regle__liste li + li { margin-top: .4rem; }
+.regle__liste--ol li::marker {
+  font: 500 .9375rem var(--serif);
+  color: var(--ocre);
+}
+.regle__liste--ul { list-style: none; }
+.regle__liste--ul li { position: relative; }
+.regle__liste--ul li::before {
+  content: "";
+  position: absolute;
+  left: -1.25rem;
+  top: .87em;
+  width: .6rem;
+  border-top: 1px solid var(--kin);
+}
+
+@media (min-width: 56rem) {
+  .regle {
+    display: grid;
+    grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+    column-gap: clamp(2.5rem, 5vw, 4.5rem);
+    align-items: start;
+  }
+  .regle__tete { margin: 0; padding-top: .2rem; }
+}
+
+@media print {
+  .entete, .pied, .evitement, .lot { display: none; }
+  .concours { padding: 0; }
+  .regle { break-inside: avoid; }
+}
