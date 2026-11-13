@@ -20,6 +20,35 @@
   const ICI = document.currentScript ? new URL('./', document.currentScript.src).href : '';
   const EN = document.documentElement.lang === 'en';
 
+  /* ——— 0. Black Friday : 150 € offerts sur chaque œuvre de 250 € et plus, code BLACK150, appliqué
+     d'office sur med-san.art (une œuvre par paiement, donc cumulable). Le HTML garde les prix normaux :
+     ce script les barre, seulement pendant l'offre. Mêmes valeurs que med-san.art
+     (src/config/blackFriday.ts). ——— */
+  const BF = {
+    code: 'BLACK150', remise: 15000, seuil: 25000,
+    debut: Date.parse('2026-11-13T00:00:00+01:00'), fin: Date.parse('2026-12-01T00:00:00+01:00'),
+  };
+  const bfActif = Date.now() >= BF.debut && Date.now() < BF.fin;
+  const eurosBF = (c) => (EN
+    ? `€${Math.round(c / 100).toLocaleString('en-GB')}`
+    : `${Math.round(c / 100).toLocaleString('fr-FR').replace(/\s/g, '\u202f')}\u00a0€`);
+  const barre = (c) => `<s class="bf-ancien">${eurosBF(c)}</s> <span class="bf-prix">${eurosBF(c - BF.remise)}</span>`;
+  if (bfActif) {
+    document.documentElement.classList.add('bf-actif');
+    const bande = document.createElement('p');
+    bande.className = 'bf-bande';
+    bande.innerHTML = EN
+      ? `<strong>Black Friday</strong><span aria-hidden="true">·</span><span>€150 off every artwork</span><span aria-hidden="true">·</span><span>code <b>${BF.code}</b></span><span class="bf-bande__date" aria-hidden="true">·</span><span class="bf-bande__date">until 30 November</span>`
+      : `<strong>Black Friday</strong><span aria-hidden="true">·</span><span>150 € offerts sur chaque œuvre</span><span aria-hidden="true">·</span><span>code <b>${BF.code}</b></span><span class="bf-bande__date" aria-hidden="true">·</span><span class="bf-bande__date">jusqu’au 30 novembre</span>`;
+    const evitement = document.querySelector('.evitement');
+    if (evitement) evitement.after(bande); else document.body.prepend(bande);
+    document.querySelectorAll('[data-centimes]').forEach((el) => {
+      const c = Number(el.dataset.centimes);
+      if (!(c >= BF.seuil)) return;
+      el.innerHTML = (el.dataset.prefixe ? `${el.dataset.prefixe} ` : '') + barre(c);
+    });
+  }
+
   const reduit = matchMedia('(prefers-reduced-motion: reduce)');
   const large = matchMedia('(min-width: 48rem)');
 
@@ -234,18 +263,25 @@
     dlg.querySelectorAll('.vignette__toile, .vignette__caisse').forEach((s) => s.style.setProperty('--r', r));
 
     const total = v.prix + (encadree ? caisse.prix : 0);
-    el.prix.textContent = euros(total);
-    el.prixBouton.textContent = euros(total);
-    el.detail.textContent = encadree
+    const promo = bfActif && v.prix >= BF.seuil;
+    if (promo) {
+      el.prix.innerHTML = barre(total);
+      el.prixBouton.innerHTML = barre(total);
+    } else {
+      el.prix.textContent = euros(total);
+      el.prixBouton.textContent = euros(total);
+    }
+    el.detail.textContent = (encadree
       ? `${cm(v.format)} · ${T.dont} ${euros(caisse.prix)}`
-      : `${cm(v.format)} · ${T.limite(t.edition)}`;
+      : `${cm(v.format)} · ${T.limite(t.edition)}`)
+      + (promo ? (EN ? ` · Black Friday: code ${BF.code} applied on med-san.art` : ` · Black Friday : code ${BF.code} appliqué sur med-san.art`) : '');
 
     const epuise = v.stock <= 0;
     const url = new URL(fiche + t.id);
     url.searchParams.set('format', v.format);
     if (encadree) url.searchParams.set('caisse', '1');
     el.commander.href = url.href;
-    el.commander.setAttribute('aria-label', T.commander(t.titre, cm(v.format), encadree, euros(total)));
+    el.commander.setAttribute('aria-label', T.commander(t.titre, cm(v.format), encadree, euros(promo ? total - BF.remise : total)));
     el.commander.toggleAttribute('aria-disabled', epuise);
     el.mention.textContent = t.variantes.every((x) => x.stock <= 0) ? T.epuisee : T.limitee;
   }

@@ -1027,3 +1027,21 @@ main, .contact, .pied { position: relative; z-index: 1; }
   .atelier--gauche { top: 22.5%; }
   .grille { grid-template-columns: minmax(0, 1fr); gap: 2.75rem; }
 }
+
+/* ——— Black Friday (13 → 30/11/2026) : la bande et les prix barrés, posés par medsan.js pendant l'offre ——— */
+.bf-bande {
+  position: relative; z-index: 40; margin: 0; height: 2rem;
+  display: flex; align-items: center; justify-content: center; gap: .6em; padding: 0 var(--g);
+  background: var(--encre); color: var(--papier);
+  font: 500 .6875rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; overflow: hidden;
+}
+.bf-bande b { font-weight: 700; letter-spacing: .22em; }
+.bf-actif .entete { top: 2rem; }
+.bf-ancien { opacity: .55; font-size: .82em; text-decoration-thickness: 1px; }
+.bf-prix { color: var(--vermillon); }
+.pilule .bf-prix, .pilule--fiche .bf-prix { color: inherit; }
+@media (max-width: 40rem) {
+  .bf-bande { font-size: .625rem; letter-spacing: .08em; gap: .45em; }
+  .bf-bande__date { display: none; }
+}
+
